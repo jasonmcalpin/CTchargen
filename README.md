@@ -4,6 +4,7 @@ chargen.py
 Classic Traveller character generator
 v0.3, April 9th, 2018
 By Omer Golan-Joel, golan2072@gmail.com
+Templates by Jason McAlpin, golmspace@gmail.com
 This code is open-source
 
 Version History

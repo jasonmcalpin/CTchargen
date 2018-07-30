@@ -1,0 +1,20 @@
+##TAS PROFILE
+**${title} ${name} ${surname}** ${sex} ${race} UPP ${upp}, ${age} years old
+
+Birth world: ${birth_world} UPP: ${birth_upp}
+
+
+
+**${career_name}** ${ranks} **${terms} Terms** ${status} Cr ${cash}
+
+Discharge World: ${discharge_world} UPP: ${discharge_upp}
+
+##SKILLS
+${skills}
+
+##MUSTERING OUT BENEFITS
+${possessions}
+
+##PSIONICS
+PSR ${psionic_rating} Psi Trained: ${psionic_trained} Talents: ${psionic_talents}
+
