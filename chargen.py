@@ -1,8 +1,9 @@
 """
 chargen.py
 Classic Traveller character generator
-v0.4, April 12th, 2018
+v0.5, July 30th, 2018
 By Omer Golan-Joel, golan2072@gmail.com
+By Jason McAlpin, golmspace@gmail.com
 This code is open-source
 """
 
@@ -16,25 +17,25 @@ from string import Template
 
 parser = argparse.ArgumentParser(description='Create Traveller characters. They will be posted to a file or the screen.')
 
-parser.add_argument('-c', '--char', type=int, help='Number of characters to create.')
+parser.add_argument('-c', '--char', type=int, help='Number of characters to generate.')
 parser.add_argument('-s', '--save',           help='Save characters to this file name.')
 parser.add_argument('-t', '--template',       help='Template name without the .template extension or spaces in name. Default is text.')
 
 args = parser.parse_args()
 
 Races=[
-	"Aslan"
-	"Droyne"
-	"Hivers"
-	"Humaniti"
-	"K'kree"
-	"Vargr"
-	"Solomani"
-	"Vilani"
-	"Zhodani"
-	"Imperial"
-	"Darrians"
-	"Geonee"
+	"Aslan",
+	"Droyne",
+	"Hiver",
+	"Humaniti",
+	"K'kree",
+	"Vargr",
+	"Solomani",
+	"Vilani",
+	"Zhodani",
+	"Imperial",
+	"Darrian",
+	"Geonee",
 	"Suerrat"
 ]
 
@@ -761,11 +762,11 @@ class character:
 	"""character generation class"""
 	def __init__ (self):
 		"""generate basic stats"""
-		self.upp=[game.dice(2, 6), game.dice(2, 6), game.dice(2, 6), game.dice(2, 6), game.dice(2, 6), game.dice(2, 6)]
-		self.skills={}
-		self.possessions={}
-		self.rank=0
-		self.race=game.random_choice(Races)
+		self.upp = [game.dice(2, 6), game.dice(2, 6), game.dice(2, 6), game.dice(2, 6), game.dice(2, 6), game.dice(2, 6)]
+		self.skills = {}
+		self.possessions = {}
+		self.rank = 0
+		self.race = game.random_choice(Races)
 		self.birth_world = game.random_line ("surnames.txt")
 		self.birth_upp = [game.dice(2, 6), game.dice(2, 6), game.dice(2, 6), game.dice(2, 6), game.dice(2, 6), game.dice(2, 6), game.dice(2, 6), game.dice(2, 6)]
 		self.discharge_world = game.random_line ("surnames.txt")
@@ -774,15 +775,15 @@ class character:
 		self.psionic_rating = game.dice(2, 6)
 		self.psionic_talents = {}
 		self.tas_member = ""
-		self.terms=0
-		self.cash=0
-		self.title=""
+		self.terms = 0
+		self.cash = 0
+		self.title = ""
 		self.status = ""
-		self.sex=game.random_choice(["male", "female"])
-		self.name=name_gen(self.sex, self.race)
-		self.surname=game.random_line ("surnames.txt")
-		self.career=career_choice(self.upp)
-		self.age=18
+		self.sex = game.random_choice(["male", "female"])
+		self.name = name_gen(self.sex, self.race)
+		self.surname = game.random_line ("surnames.txt")
+		self.career = career_choice(self.upp)
+		self.age = 18
 		"""enlistment"""
 		enlistment=game.dice(2,6)
 		if self.upp[self.career["enlistment DM+1"]]>=self.career["enlistment DM+1 level"]:

@@ -1,9 +1,7 @@
 ##TAS PROFILE
-**${title} ${name} ${surname}** ${sex} ${race} UPP ${upp}, ${age} years old
+**${title} ${name} ${surname}**, ${sex} ${race}, UPP ${upp}, ${age} years old
 
 Birth world: ${birth_world} UPP: ${birth_upp}
-
-
 
 **${career_name}** ${ranks} **${terms} Terms** ${status} Cr ${cash}
 
