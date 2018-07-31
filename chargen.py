@@ -9,9 +9,10 @@ This code is open-source
 
 # import modules
 import stellagama as game
-import sys, argparse
+import sys, argparse, re
 from string import Template
 from worldgen import world
+from hyphenate import hyphenate_word
 
 # command line control system
 
@@ -572,15 +573,62 @@ vehicles=[
 
 def name_gen(sex, race): #input character sex
 	"""
-	randomly chooses a character name from a list
+	randomly create a name from a list of names
 	"""
 	name=""
-	if sex=="male":
-		return game.random_line("malenames.txt") #output random male name
-	elif sex=="female":
-		return game.random_line("femalenames.txt") #output random female name
-	else:	#in case of wrong input
-		return "Tokay" #output placeholder
+	name_bank = []
+	syllable_bank = ""
+	current_syllable = 1
+	number_of_syllables = game.dice(1,3)
+
+	# if sex=="male":
+	# 	syllable_bank = game.random_line("malenames.txt") #output random male name
+	# else:
+	# 	syllable_bank = game.random_line("femalenames.txt") #output random female name
+
+	# return syllable_bank.capitalize()
+
+	while current_syllable <= number_of_syllables:
+		if sex=="male":
+			syllable_bank = game.random_line("malenames.txt") #output random male name
+		else:
+			syllable_bank = game.random_line("femalenames.txt") #output random female name
+		
+		name_bank = hyphenate_word(syllable_bank)
+		
+		if len(name_bank) > 0:
+			name += game.random_choice(name_bank)
+
+		current_syllable += 1
+
+	return name.capitalize()
+
+def surname_gen(): #input character sex
+	"""
+	randomly create a name from a list of names
+	"""
+
+	# return game.random_line("surnames.txt")
+
+	name=""
+	name_bank = {}
+	syllable_bank = ""
+	current_syllable = 0
+	number_of_syllables = game.dice(1,3)
+
+	while current_syllable < number_of_syllables:
+
+		syllable_bank = game.random_line("surnames.txt") #output random male name
+
+		# print(syllable_bank)
+		name_bank = hyphenate_word(syllable_bank)
+
+		if len(name_bank) > 0:
+			name += game.random_choice(name_bank)
+
+		current_syllable += 1
+
+	return name.capitalize()
 
 def add_skill(skill_list, skill): #inputs the skill dictionary and skill
 	"""
@@ -768,11 +816,11 @@ class character:
 		self.rank = 0
 		self.race = game.random_choice(Races)
 		self.birth_world = world()
-		self.birth_world_name = game.random_line ("surnames.txt")
+		self.birth_world_name = surname_gen()
 		self.birth_upp = self.birth_world.upp
 		self.birth_starport = self.birth_world.starport
 		self.discharge_world = world()
-		self.discharge_world_name = game.random_line ("surnames.txt")
+		self.discharge_world_name = surname_gen()
 		self.discharge_starport = self.discharge_world.starport
 		self.discharge_upp = self.discharge_world.upp
 		self.psionic_trained = "no"
@@ -785,7 +833,7 @@ class character:
 		self.status = ""
 		self.sex = game.random_choice(["male", "female"])
 		self.name = name_gen(self.sex, self.race)
-		self.surname = game.random_line ("surnames.txt")
+		self.surname = surname_gen()
 		self.career = career_choice(self.upp)
 		self.age = 18
 
