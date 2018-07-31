@@ -618,14 +618,14 @@ def surname_gen(): #input character sex
 
 	while current_syllable < number_of_syllables:
 
-		syllable_bank = game.random_line("surnames.txt") #output random male name
+		syllable_bank = game.random_line("piratewords.txt") #output random male name
 
 		# print(syllable_bank)
 		name_bank = hyphenate_word(syllable_bank)
 
 		if len(name_bank) > 0:
 			name += game.random_choice(name_bank)
-
+		# print(name)
 		current_syllable += 1
 
 	return name.capitalize()
