@@ -1,0 +1,16 @@
+WORLD
+***
+Birth world: ${birth_world_name} 
+UPP: ${birth_starport}-${birth_upp}
+starport: ${starport}
+-
+size: ${size}
+atmosphere: ${atmosphere}
+hydrographics: ${hydrographics}
+population: ${population}
+government: ${government}
+lawlevel: ${lawlevel}
+techlevel: ${techlevel}
+
+
+

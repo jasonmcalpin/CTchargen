@@ -11,7 +11,7 @@ This code is open-source
 import stellagama as game
 import sys, argparse
 from string import Template
-
+from worldgen import world
 
 # command line control system
 
@@ -737,7 +737,14 @@ def upp_stringer(input_list): #input a characteristics list
 	"""
 	output_list=[]
 	for item in input_list:
-		output_list.append(str(game.pseudo_hex(item)))
+		if item < -4:
+			output_list.append('0')
+		elif item == -4:
+			output_list.append('X')
+		elif item > 15:
+			output_list.append(str(game.pseudo_hex(15)))
+		else:
+			output_list.append(str(game.pseudo_hex(item)))
 	return ''.join (output_list) #output a string
 
 def career_choice (upp): #input upp list
@@ -767,10 +774,14 @@ class character:
 		self.possessions = {}
 		self.rank = 0
 		self.race = game.random_choice(Races)
-		self.birth_world = game.random_line ("surnames.txt")
-		self.birth_upp = [game.dice(2, 6), game.dice(2, 6), game.dice(2, 6), game.dice(2, 6), game.dice(2, 6), game.dice(2, 6), game.dice(2, 6), game.dice(2, 6)]
-		self.discharge_world = game.random_line ("surnames.txt")
-		self.discharge_upp = [game.dice(2, 6), game.dice(2, 6), game.dice(2, 6), game.dice(2, 6), game.dice(2, 6), game.dice(2, 6), game.dice(2, 6), game.dice(2, 6)]
+		self.birth_world = world()
+		self.birth_world_name = game.random_line ("surnames.txt")
+		self.birth_upp = self.birth_world.upp
+		self.birth_starport = self.birth_world.starport
+		self.discharge_world = world()
+		self.discharge_world_name = game.random_line ("surnames.txt")
+		self.discharge_starport = self.discharge_world.starport
+		self.discharge_upp = self.discharge_world.upp
 		self.psionic_trained = "no"
 		self.psionic_rating = game.dice(2, 6)
 		self.psionic_talents = {}
@@ -784,6 +795,15 @@ class character:
 		self.surname = game.random_line ("surnames.txt")
 		self.career = career_choice(self.upp)
 		self.age = 18
+
+		self.size = self.birth_world.size,
+		self.atmosphere = self.birth_world.atmosphere,
+		self.hydrographics = self.birth_world.hydrographics,
+		self.population = self.birth_world.population,
+		self.government = self.birth_world.government,
+		self.lawlevel = self.birth_world.lawlevel,
+		self.starport = self.birth_world.starport,
+		self.techlevel = self.birth_world.techlevel,
 		"""enlistment"""
 		enlistment=game.dice(2,6)
 		if self.upp[self.career["enlistment DM+1"]]>=self.career["enlistment DM+1 level"]:
@@ -1028,9 +1048,11 @@ for x in range(number_of_runs):
 			sex = character1.sex,
 			upp = upp_stringer(character1.upp), 
 			age = character1.age, 
-			birth_world = character1.birth_world,
+			birth_world_name = character1.birth_world_name,
+			birth_starport = character1.birth_starport,
 			birth_upp = upp_stringer(character1.birth_upp),
-			discharge_world = character1.discharge_world,
+			discharge_world_name = character1.discharge_world_name,
+			discharge_starport = character1.discharge_starport,
 			discharge_upp = upp_stringer(character1.discharge_upp),
 			psionic_trained = character1.psionic_trained,
 			psionic_rating = character1.psionic_rating,
@@ -1042,7 +1064,15 @@ for x in range(number_of_runs):
 			status = character1.status, 
 			cash = character1.cash, 
 			skills = skill_stringer(character1.skills), 
-			possessions = possession_stringer(character1.possessions)
+			possessions = possession_stringer(character1.possessions),
+			size = character1.size,
+			atmosphere = character1.atmosphere,
+			hydrographics = character1.hydrographics,
+			population = character1.population,
+			government = character1.government,
+			lawlevel = character1.lawlevel,
+			starport = character1.starport,
+			techlevel = character1.techlevel,
 		)
 	)
 

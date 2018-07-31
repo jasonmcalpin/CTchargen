@@ -1,7 +1,7 @@
 ${title} ${name} ${surname}, ${sex} ${race}, UPP ${upp}, ${age} years old
-Birth world: ${birth_world} UPP: ${birth_upp}
+Birth world: ${birth_world_name} UPP: ${birth_starport}-${birth_upp}
 ${career_name} ${ranks} ${terms} Terms ${status} Cr ${cash}
-Discharge World: ${discharge_world} UPP: ${discharge_upp}
+Discharge World: ${discharge_world_name} UPP: ${discharge_starport}-${discharge_upp}
 
 ${skills}
 
