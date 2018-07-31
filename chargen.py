@@ -719,7 +719,7 @@ def skill_stringer(input_dict): #input a dictionary
 	"""
 	return ', '.join('-'.join((k, str(v))) for k,v in sorted(input_dict.items())) #output formatted skill list string
 
-def psionic_stringer(input_dict): #input a dictionary
+def array_stringer(input_dict): #input a dictionary
 	"""
 	converts a dictionary to a string, Traveller psionic list format
 	"""
@@ -737,14 +737,7 @@ def upp_stringer(input_list): #input a characteristics list
 	"""
 	output_list=[]
 	for item in input_list:
-		if item < -4:
-			output_list.append('0')
-		elif item == -4:
-			output_list.append('X')
-		elif item > 15:
-			output_list.append(str(game.pseudo_hex(15)))
-		else:
-			output_list.append(str(game.pseudo_hex(item)))
+		output_list.append(str(game.pseudo_hex(item)))
 	return ''.join (output_list) #output a string
 
 def career_choice (upp): #input upp list
@@ -796,14 +789,15 @@ class character:
 		self.career = career_choice(self.upp)
 		self.age = 18
 
-		self.size = self.birth_world.size,
-		self.atmosphere = self.birth_world.atmosphere,
-		self.hydrographics = self.birth_world.hydrographics,
-		self.population = self.birth_world.population,
-		self.government = self.birth_world.government,
-		self.lawlevel = self.birth_world.lawlevel,
-		self.starport = self.birth_world.starport,
-		self.techlevel = self.birth_world.techlevel,
+		# Test for world values use with -t world
+		self.birth_size = self.birth_world.size,
+		self.birth_atmosphere = self.birth_world.atmosphere,
+		self.birth_hydrographics = self.birth_world.hydrographics,
+		self.birth_population = self.birth_world.population,
+		self.birth_government = self.birth_world.government,
+		self.birth_lawlevel = self.birth_world.lawlevel,
+		self.birth_techlevel = self.birth_world.techlevel,
+		self.birth_tradelevel = self.birth_world.tradelevel
 		"""enlistment"""
 		enlistment=game.dice(2,6)
 		if self.upp[self.career["enlistment DM+1"]]>=self.career["enlistment DM+1 level"]:
@@ -1056,7 +1050,7 @@ for x in range(number_of_runs):
 			discharge_upp = upp_stringer(character1.discharge_upp),
 			psionic_trained = character1.psionic_trained,
 			psionic_rating = character1.psionic_rating,
-			psionic_talents = psionic_stringer(character1.psionic_talents),
+			psionic_talents = array_stringer(character1.psionic_talents),
 			tas_member = character1.tas_member,
 			career_name = character1.career["name"], 
 			ranks = character1.career["ranks"][character1.rank], 
@@ -1065,14 +1059,16 @@ for x in range(number_of_runs):
 			cash = character1.cash, 
 			skills = skill_stringer(character1.skills), 
 			possessions = possession_stringer(character1.possessions),
-			size = character1.size,
-			atmosphere = character1.atmosphere,
-			hydrographics = character1.hydrographics,
-			population = character1.population,
-			government = character1.government,
-			lawlevel = character1.lawlevel,
-			starport = character1.starport,
-			techlevel = character1.techlevel,
+
+			# Test for world values 
+			size = upp_stringer(character1.birth_size),
+			atmosphere = upp_stringer(character1.birth_atmosphere),
+			hydrographics = upp_stringer(character1.birth_hydrographics),
+			population = upp_stringer(character1.birth_population),
+			government = upp_stringer(character1.birth_government),
+			lawlevel = upp_stringer(character1.birth_lawlevel),
+			techlevel = upp_stringer(character1.birth_techlevel),
+			trade = array_stringer(character1.birth_tradelevel)
 		)
 	)
 

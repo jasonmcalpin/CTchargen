@@ -2,8 +2,8 @@ WORLD
 ***
 Birth world: ${birth_world_name} 
 UPP: ${birth_starport}-${birth_upp}
-starport: ${starport}
--
+starport: ${birth_starport}
+
 size: ${size}
 atmosphere: ${atmosphere}
 hydrographics: ${hydrographics}
@@ -12,5 +12,5 @@ government: ${government}
 lawlevel: ${lawlevel}
 techlevel: ${techlevel}
 
-
-
+LOCAL TRADE
+${trade}
