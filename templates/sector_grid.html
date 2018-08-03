@@ -1,0 +1,807 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+	<meta charset="UTF-8">
+	<meta http-equiv="x-ua-compatible" content="ie=edge">
+	<title>Document</title>
+	<meta name="description" content="Hexagonal Grid by Codin @ Codesmite.com">
+	<meta name="viewport" content="width=device-width, initial-scale=1"> 
+	<style type="text/css">
+		.subsector_map {
+		    background: #393939;
+		}
+		.grid {
+		    position: relative;
+		    width: 60%;
+		    margin: 0 auto;
+		    padding: 1em 0 2em; /* Clears unordered list default of 40px */
+		}
+		.grid li {
+		    list-style-type: none;
+		    position: relative;
+		    float: left;
+		    width: 11.25%;
+		    padding: 0 0 13.0187762702% 0;
+		    -o-transform: rotate(-60deg) skewY(30deg);
+		    -moz-transform: rotate(-60deg) skewY(30deg);
+		    -webkit-transform: rotate(-60deg) skewY(30deg);
+		    -ms-transform: rotate(-60deg) skewY(30deg);
+		    transform: rotate(-60deg) skewY(30deg);
+		    background: #fd005f;
+		    overflow: hidden;
+		    visibility: hidden;
+		}
+
+		.grid li:nth-child(16n+9), .grid li:nth-child(16n+10), .grid li:nth-child(16n+11), .grid li:nth-child(16n+12), .grid li:nth-child(16n+13), .grid li:nth-child(16n+14), .grid li:nth-child(16n+15), .grid li:nth-child(16n+16) {
+		    margin-top: -2.56249999994%;
+		    margin-bottom: -2.56249999994%;
+		    -o-transform: translateX(50%) rotate(-60deg) skewY(30deg);
+		    -moz-transform: translateX(50%) rotate(-60deg) skewY(30deg);
+		    -webkit-transform: translateX(50%) rotate(-60deg) skewY(30deg);
+		    -ms-transform: translateX(50%) rotate(-60deg) skewY(30deg);
+		    transform: translateX(50%) rotate(-60deg) skewY(30deg);
+		}
+
+		.grid li:nth-child(1n) {
+		  margin: 0 .5%;
+		}
+		.grid li:nth-child(8n) { 
+		    margin-left: 0.125%;
+		}
+
+
+		.grid li .hexagon {
+		    position: absolute;
+		    top: 0;
+		    left: 0;
+		    width: 100%;
+		    height: 100%;
+		    background: #fdbf00;
+		    -o-transform: skewY(-30deg) rotate(60deg);
+		    -moz-transform: skewY(-30deg) rotate(60deg);
+		    -webkit-transform: skewY(-30deg) rotate(60deg);
+		    -ms-transform: skewY(-30deg) rotate(60deg);
+		    transform: skewY(-30deg) rotate(60deg);
+		    overflow: hidden;
+		}
+
+
+		.grid li * {
+		    visibility: visible;
+		}
+
+		.clear:after {
+		    content: "";
+		    display: block;
+		    clear: both;
+		}
+
+		.grid li:nth-child(1n+1) {
+		  margin: 0.5%;
+		}
+
+		.grid li:nth-child(16n+9), .grid li:nth-child(16n+10), .grid li:nth-child(16n+11), .grid li:nth-child(16n+12), .grid li:nth-child(16n+13), .grid li:nth-child(16n+14), .grid li:nth-child(16n+15), .grid li:nth-child(16n+16) {
+		    margin-top: -2.9285714285%;
+		    margin-bottom: -2.9285714285%;
+		    -o-transform: translateX(50%) rotate(-60deg) skewY(30deg);
+		    -moz-transform: translateX(50%) rotate(-60deg) skewY(30deg);
+		    -webkit-transform: translateX(50%) rotate(-60deg) skewY(30deg);
+		    -ms-transform: translateX(50%) rotate(-60deg) skewY(30deg);
+		    transform: translateX(50%) rotate(-60deg) skewY(30deg);
+		}
+
+		.grid li:nth-child(16n+9) { 
+		    margin-left: 1%;
+		}
+
+		.label {
+		    text-align: center;
+		    margin-top: 1em;
+		    font-size: 0.6em;
+		    font-family: sans-serif;
+		}
+
+
+		.star {
+		    background: blue;
+		    height: 17%;
+		    width: 20%;
+		    top: 30%;
+		    transform: translateY(-45%) translateX(-45%);
+		    position: relative;
+		    left: 50%;
+		    border-radius: 50%;
+		}
+		.starname {
+		    text-align: center;
+		    margin-top: 2.7em;
+		    font-size: .6em;
+		    font-family: sans-serif;
+		}
+
+	</style>
+</head>
+<body>
+
+	<div class="subsector_map">
+		<ul id="grid" class="grid clear">
+			<li>
+				<div class="hexagon">
+					<div class="label">0101</div>
+					<div class="star"></div>
+					<div class="starport"></div>
+					<div class="starname">name</div>
+				</div>
+			</li>
+			<li>
+				<div class="hexagon">
+					<div class="label">0201</div>
+					<div class="star"></div>
+					<div class="starport"></div>
+					<div class="starname">name</div>
+				</div>
+			</li>
+			<li>
+				<div class="hexagon">
+					<div class="label">0301</div>
+					<div class="star"></div>
+					<div class="starport"></div>
+					<div class="starname">name</div>
+				</div>
+			</li>
+			<li>
+				<div class="hexagon">
+					<div class="label">0401</div>
+					<div class="star"></div>
+					<div class="starport"></div>
+					<div class="starname">name</div>
+				</div>
+			</li>
+			<li>
+				<div class="hexagon">
+					<div class="label">0501</div>
+					<div class="star"></div>
+					<div class="starport"></div>
+					<div class="starname">name</div>
+				</div>
+			</li>
+			<li>
+				<div class="hexagon">
+					<div class="label">0601</div>
+					<div class="star"></div>
+					<div class="starport"></div>
+					<div class="starname">name</div>
+				</div>
+			</li>
+			<li>
+				<div class="hexagon">
+					<div class="label">0701</div>
+					<div class="star"></div>
+					<div class="starport"></div>
+					<div class="starname">name</div>
+				</div>
+			</li>
+			<li>
+				<div class="hexagon">
+					<div class="label">0801</div>
+					<div class="star"></div>
+					<div class="starport"></div>
+					<div class="starname">name</div>
+				</div>
+			</li>
+			
+
+
+
+			<li>
+				<div class="hexagon">
+					<div class="label">0102</div>
+					<div class="star"></div>
+					<div class="starport"></div>
+					<div class="starname">name</div>
+				</div>
+			</li>
+			<li>
+				<div class="hexagon">
+					<div class="label">0202</div>
+					<div class="star"></div>
+					<div class="starport"></div>
+					<div class="starname">name</div>
+				</div>
+			</li>
+			<li>
+				<div class="hexagon">
+					<div class="label">0302</div>
+					<div class="star"></div>
+					<div class="starport"></div>
+					<div class="starname">name</div>
+				</div>
+			</li>
+			<li>
+				<div class="hexagon">
+					<div class="label">0402</div>
+					<div class="star"></div>
+					<div class="starport"></div>
+					<div class="starname">name</div>
+				</div>
+			</li>
+			<li>
+				<div class="hexagon">
+					<div class="label">0502</div>
+					<div class="star"></div>
+					<div class="starport"></div>
+					<div class="starname">name</div>
+				</div>
+			</li>
+			<li>
+				<div class="hexagon">
+					<div class="label">0602</div>
+					<div class="star"></div>
+					<div class="starport"></div>
+					<div class="starname">name</div>
+				</div>
+			</li>
+			<li>
+				<div class="hexagon">
+					<div class="label">0702</div>
+					<div class="star"></div>
+					<div class="starport"></div>
+					<div class="starname">name</div>
+				</div>
+			</li>
+			<li>
+				<div class="hexagon">
+					<div class="label">0802</div>
+					<div class="star"></div>
+					<div class="starport"></div>
+					<div class="starname">name</div>
+				</div>
+			</li>
+
+
+
+			<li>
+				<div class="hexagon">
+					<div class="label">0103</div>
+					<div class="star"></div>
+					<div class="starport"></div>
+					<div class="starname">name</div>
+				</div>
+			</li>
+			<li>
+				<div class="hexagon">
+					<div class="label">0203</div>
+					<div class="star"></div>
+					<div class="starport"></div>
+					<div class="starname">name</div>
+				</div>
+			</li>
+			<li>
+				<div class="hexagon">
+					<div class="label">0303</div>
+					<div class="star"></div>
+					<div class="starport"></div>
+					<div class="starname">name</div>
+				</div>
+			</li>
+			<li>
+				<div class="hexagon">
+					<div class="label">0403</div>
+					<div class="star"></div>
+					<div class="starport"></div>
+					<div class="starname">name</div>
+				</div>
+			</li>
+			<li>
+				<div class="hexagon">
+					<div class="label">0503</div>
+					<div class="star"></div>
+					<div class="starport"></div>
+					<div class="starname">name</div>
+				</div>
+			</li>
+			<li>
+				<div class="hexagon">
+					<div class="label">0603</div>
+					<div class="star"></div>
+					<div class="starport"></div>
+					<div class="starname">name</div>
+				</div>
+			</li>
+			<li>
+				<div class="hexagon">
+					<div class="label">0703</div>
+					<div class="star"></div>
+					<div class="starport"></div>
+					<div class="starname">name</div>
+				</div>
+			</li>
+			<li>
+				<div class="hexagon">
+					<div class="label">0803</div>
+					<div class="star"></div>
+					<div class="starport"></div>
+					<div class="starname">name</div>
+				</div>
+			</li>
+
+
+
+
+			<li>
+				<div class="hexagon">
+					<div class="label">0104</div>
+					<div class="star"></div>
+					<div class="starport"></div>
+					<div class="starname">name</div>
+				</div>
+			</li>
+			<li>
+				<div class="hexagon">
+					<div class="label">0204</div>
+					<div class="star"></div>
+					<div class="starport"></div>
+					<div class="starname">name</div>
+				</div>
+			</li>
+			<li>
+				<div class="hexagon">
+					<div class="label">0304</div>
+					<div class="star"></div>
+					<div class="starport"></div>
+					<div class="starname">name</div>
+				</div>
+			</li>
+			<li>
+				<div class="hexagon">
+					<div class="label">0404</div>
+					<div class="star"></div>
+					<div class="starport"></div>
+					<div class="starname">name</div>
+				</div>
+			</li>
+			<li>
+				<div class="hexagon">
+					<div class="label">0504</div>
+					<div class="star"></div>
+					<div class="starport"></div>
+					<div class="starname">name</div>
+				</div>
+			</li>
+			<li>
+				<div class="hexagon">
+					<div class="label">0604</div>
+					<div class="star"></div>
+					<div class="starport"></div>
+					<div class="starname">name</div>
+				</div>
+			</li>
+			<li>
+				<div class="hexagon">
+					<div class="label">0704</div>
+					<div class="star"></div>
+					<div class="starport"></div>
+					<div class="starname">name</div>
+				</div>
+			</li>
+			<li>
+				<div class="hexagon">
+					<div class="label">0804</div>
+					<div class="star"></div>
+					<div class="starport"></div>
+					<div class="starname">name</div>
+				</div>
+			</li>
+
+
+
+
+			<li>
+				<div class="hexagon">
+					<div class="label">0105</div>
+					<div class="star"></div>
+					<div class="starport"></div>
+					<div class="starname">name</div>
+				</div>
+			</li>
+			<li>
+				<div class="hexagon">
+					<div class="label">0205</div>
+					<div class="star"></div>
+					<div class="starport"></div>
+					<div class="starname">name</div>
+				</div>
+			</li>
+			<li>
+				<div class="hexagon">
+					<div class="label">0305</div>
+					<div class="star"></div>
+					<div class="starport"></div>
+					<div class="starname">name</div>
+				</div>
+			</li>
+			<li>
+				<div class="hexagon">
+					<div class="label">0405</div>
+					<div class="star"></div>
+					<div class="starport"></div>
+					<div class="starname">name</div>
+				</div>
+			</li>
+			<li>
+				<div class="hexagon">
+					<div class="label">0505</div>
+					<div class="star"></div>
+					<div class="starport"></div>
+					<div class="starname">name</div>
+				</div>
+			</li>
+			<li>
+				<div class="hexagon">
+					<div class="label">0605</div>
+					<div class="star"></div>
+					<div class="starport"></div>
+					<div class="starname">name</div>
+				</div>
+			</li>
+			<li>
+				<div class="hexagon">
+					<div class="label">0705</div>
+					<div class="star"></div>
+					<div class="starport"></div>
+					<div class="starname">name</div>
+				</div>
+			</li>
+			<li>
+				<div class="hexagon">
+					<div class="label">0805</div>
+					<div class="star"></div>
+					<div class="starport"></div>
+					<div class="starname">name</div>
+				</div>
+			</li>
+
+
+
+
+			<li>
+				<div class="hexagon">
+					<div class="label">0106</div>
+					<div class="star"></div>
+					<div class="starport"></div>
+					<div class="starname">name</div>
+				</div>
+			</li>
+			<li>
+				<div class="hexagon">
+					<div class="label">0206</div>
+					<div class="star"></div>
+					<div class="starport"></div>
+					<div class="starname">name</div>
+				</div>
+			</li>
+			<li>
+				<div class="hexagon">
+					<div class="label">0306</div>
+					<div class="star"></div>
+					<div class="starport"></div>
+					<div class="starname">name</div>
+				</div>
+			</li>
+			<li>
+				<div class="hexagon">
+					<div class="label">0406</div>
+					<div class="star"></div>
+					<div class="starport"></div>
+					<div class="starname">name</div>
+				</div>
+			</li>
+			<li>
+				<div class="hexagon">
+					<div class="label">0506</div>
+					<div class="star"></div>
+					<div class="starport"></div>
+					<div class="starname">name</div>
+				</div>
+			</li>
+			<li>
+				<div class="hexagon">
+					<div class="label">0606</div>
+					<div class="star"></div>
+					<div class="starport"></div>
+					<div class="starname">name</div>
+				</div>
+			</li>
+			<li>
+				<div class="hexagon">
+					<div class="label">0706</div>
+					<div class="star"></div>
+					<div class="starport"></div>
+					<div class="starname">name</div>
+				</div>
+			</li>
+			<li>
+				<div class="hexagon">
+					<div class="label">0806</div>
+					<div class="star"></div>
+					<div class="starport"></div>
+					<div class="starname">name</div>
+				</div>
+			</li>
+
+
+
+
+			<li>
+				<div class="hexagon">
+					<div class="label">0107</div>
+					<div class="star"></div>
+					<div class="starport"></div>
+					<div class="starname">name</div>
+				</div>
+			</li>
+			<li>
+				<div class="hexagon">
+					<div class="label">0207</div>
+					<div class="star"></div>
+					<div class="starport"></div>
+					<div class="starname">name</div>
+				</div>
+			</li>
+			<li>
+				<div class="hexagon">
+					<div class="label">0307</div>
+					<div class="star"></div>
+					<div class="starport"></div>
+					<div class="starname">name</div>
+				</div>
+			</li>
+			<li>
+				<div class="hexagon">
+					<div class="label">0407</div>
+					<div class="star"></div>
+					<div class="starport"></div>
+					<div class="starname">name</div>
+				</div>
+			</li>
+			<li>
+				<div class="hexagon">
+					<div class="label">0507</div>
+					<div class="star"></div>
+					<div class="starport"></div>
+					<div class="starname">name</div>
+				</div>
+			</li>
+			<li>
+				<div class="hexagon">
+					<div class="label">0607</div>
+					<div class="star"></div>
+					<div class="starport"></div>
+					<div class="starname">name</div>
+				</div>
+			</li>
+			<li>
+				<div class="hexagon">
+					<div class="label">0707</div>
+					<div class="star"></div>
+					<div class="starport"></div>
+					<div class="starname">name</div>
+				</div>
+			</li>
+			<li>
+				<div class="hexagon">
+					<div class="label">0807</div>
+					<div class="star"></div>
+					<div class="starport"></div>
+					<div class="starname">name</div>
+				</div>
+			</li>
+
+
+
+
+			<li>
+				<div class="hexagon">
+					<div class="label">0108</div>
+					<div class="star"></div>
+					<div class="starport"></div>
+					<div class="starname">name</div>
+				</div>
+			</li>
+			<li>
+				<div class="hexagon">
+					<div class="label">0208</div>
+					<div class="star"></div>
+					<div class="starport"></div>
+					<div class="starname">name</div>
+				</div>
+			</li>
+			<li>
+				<div class="hexagon">
+					<div class="label">0308</div>
+					<div class="star"></div>
+					<div class="starport"></div>
+					<div class="starname">name</div>
+				</div>
+			</li>
+			<li>
+				<div class="hexagon">
+					<div class="label">0408</div>
+					<div class="star"></div>
+					<div class="starport"></div>
+					<div class="starname">name</div>
+				</div>
+			</li>
+			<li>
+				<div class="hexagon">
+					<div class="label">0508</div>
+					<div class="star"></div>
+					<div class="starport"></div>
+					<div class="starname">name</div>
+				</div>
+			</li>
+			<li>
+				<div class="hexagon">
+					<div class="label">0608</div>
+					<div class="star"></div>
+					<div class="starport"></div>
+					<div class="starname">name</div>
+				</div>
+			</li>
+			<li>
+				<div class="hexagon">
+					<div class="label">0708</div>
+					<div class="star"></div>
+					<div class="starport"></div>
+					<div class="starname">name</div>
+				</div>
+			</li>
+			<li>
+				<div class="hexagon">
+					<div class="label">0808</div>
+					<div class="star"></div>
+					<div class="starport"></div>
+					<div class="starname">name</div>
+				</div>
+			</li>
+
+
+
+
+			<li>
+				<div class="hexagon">
+					<div class="label">0109</div>
+					<div class="star"></div>
+					<div class="starport"></div>
+					<div class="starname">name</div>
+				</div>
+			</li>
+			<li>
+				<div class="hexagon">
+					<div class="label">0209</div>
+					<div class="star"></div>
+					<div class="starport"></div>
+					<div class="starname">name</div>
+				</div>
+			</li>
+			<li>
+				<div class="hexagon">
+					<div class="label">0309</div>
+					<div class="star"></div>
+					<div class="starport"></div>
+					<div class="starname">name</div>
+				</div>
+			</li>
+			<li>
+				<div class="hexagon">
+					<div class="label">0409</div>
+					<div class="star"></div>
+					<div class="starport"></div>
+					<div class="starname">name</div>
+				</div>
+			</li>
+			<li>
+				<div class="hexagon">
+					<div class="label">0509</div>
+					<div class="star"></div>
+					<div class="starport"></div>
+					<div class="starname">name</div>
+				</div>
+			</li>
+			<li>
+				<div class="hexagon">
+					<div class="label">0609</div>
+					<div class="star"></div>
+					<div class="starport"></div>
+					<div class="starname">name</div>
+				</div>
+			</li>
+			<li>
+				<div class="hexagon">
+					<div class="label">0709</div>
+					<div class="star"></div>
+					<div class="starport"></div>
+					<div class="starname">name</div>
+				</div>
+			</li>
+			<li>
+				<div class="hexagon">
+					<div class="label">0809</div>
+					<div class="star"></div>
+					<div class="starport"></div>
+					<div class="starname">name</div>
+				</div>
+			</li>
+
+
+
+
+			<li>
+				<div class="hexagon">
+					<div class="label">0110</div>
+					<div class="star"></div>
+					<div class="starport"></div>
+					<div class="starname">name</div>
+				</div>
+			</li>
+			<li>
+				<div class="hexagon">
+					<div class="label">0210</div>
+					<div class="star"></div>
+					<div class="starport"></div>
+					<div class="starname">name</div>
+				</div>
+			</li>
+			<li>
+				<div class="hexagon">
+					<div class="label">0310</div>
+					<div class="star"></div>
+					<div class="starport"></div>
+					<div class="starname">name</div>
+				</div>
+			</li>
+			<li>
+				<div class="hexagon">
+					<div class="label">0410</div>
+					<div class="star"></div>
+					<div class="starport"></div>
+					<div class="starname">name</div>
+				</div>
+			</li>
+			<li>
+				<div class="hexagon">
+					<div class="label">0510</div>
+					<div class="star"></div>
+					<div class="starport"></div>
+					<div class="starname">name</div>
+				</div>
+			</li>
+			<li>
+				<div class="hexagon">
+					<div class="label">0610</div>
+					<div class="star"></div>
+					<div class="starport"></div>
+					<div class="starname">name</div>
+				</div>
+			</li>
+			<li>
+				<div class="hexagon">
+					<div class="label">0710</div>
+					<div class="star"></div>
+					<div class="starport"></div>
+					<div class="starname">name</div>
+				</div>
+			</li>
+			<li>
+				<div class="hexagon">
+					<div class="label">0810</div>
+					<div class="star"></div>
+					<div class="starport"></div>
+					<div class="starname">name</div>
+				</div>
+			</li>
+		</ul>
+	</div>
+	
+</body>
+</html>

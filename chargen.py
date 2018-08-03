@@ -8,19 +8,20 @@ This code is open-source
 """
 
 # import modules
-import stellagama as game
+import lib.stellagama as game
 import sys, argparse, re
 from string import Template
-from worldgen import world
-from hyphenate import hyphenate_word
+from lib.worldgen import world
+from lib.hyphenate import hyphenate_word
 
 # command line control system
 
 parser = argparse.ArgumentParser(description='Create Traveller characters. They will be posted to a file or the screen.')
 
 parser.add_argument('-c', '--char', type=int, help='Number of characters to generate.')
-parser.add_argument('-s', '--save',           help='Save characters to this file name.')
+parser.add_argument('-f', '--file',           help='Save characters to this file name.')
 parser.add_argument('-t', '--template',       help='Template name without the .template extension or spaces in name. Default is text.')
+parser.add_argument('-s', '--seed',           help='seed in the form of a UPP code')
 
 args = parser.parse_args()
 
@@ -570,6 +571,21 @@ vehicles=[
 ]
 
 # functions
+def word_gen(): #input character sex
+	"""
+	randomly create a syllable from a random list of syllables
+	"""
+	name_source = name=""
+	name_source =  game.random_choice([
+		"names/englishsyllables.txt",
+		"names/frenchsyllables.txt",
+		"names/irishsyllables.txt",
+		"names/italiansyllables.txt",
+		# "names/latinwords.txt",
+		"names/spanishsyllables.txt",
+	])
+	name += game.random_line(name_source)
+	return name.capitalize()
 
 def name_gen(sex, race): #input character sex
 	"""
@@ -579,20 +595,19 @@ def name_gen(sex, race): #input character sex
 	name_bank = []
 	syllable_bank = ""
 	current_syllable = 1
-	number_of_syllables = game.dice(1,3)
+	number_of_syllables = game.dice(2,2)
 
 	# if sex=="male":
-	# 	syllable_bank = game.random_line("malenames.txt") #output random male name
+	# 	syllable_bank = game.random_line("names/englishsyllables.txt") #output random male name
 	# else:
-	# 	syllable_bank = game.random_line("femalenames.txt") #output random female name
-
+	# 	syllable_bank = game.random_line("names/englishsyllables.txt") #output random female name
 	# return syllable_bank.capitalize()
 
 	while current_syllable <= number_of_syllables:
 		if sex=="male":
-			syllable_bank = game.random_line("malenames.txt") #output random male name
+			syllable_bank = word_gen() #output random male name
 		else:
-			syllable_bank = game.random_line("femalenames.txt") #output random female name
+			syllable_bank = word_gen() #output random female name
 		
 		name_bank = hyphenate_word(syllable_bank)
 		
@@ -614,11 +629,11 @@ def surname_gen(): #input character sex
 	name_bank = {}
 	syllable_bank = ""
 	current_syllable = 0
-	number_of_syllables = game.dice(1,3)
+	number_of_syllables = game.dice(2,2)
 
 	while current_syllable < number_of_syllables:
 
-		syllable_bank = game.random_line("piratewords.txt") #output random male name
+		syllable_bank = word_gen() #output random male name
 
 		# print(syllable_bank)
 		name_bank = hyphenate_word(syllable_bank)
@@ -1072,8 +1087,8 @@ if args.template:
 filein = open( template_name )
 character_sheet = Template( filein.read() )
 
-if args.save:
-	file_name = args.save + '.' + print_extension
+if args.file:
+	file_name = args.file + '.' + print_extension
 
 if file_name:
 	sys.stdout = open(file_name, "w")
