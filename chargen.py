@@ -632,12 +632,9 @@ def surname_gen(): #input character sex
 	number_of_syllables = game.dice(2,2)
 
 	while current_syllable < number_of_syllables:
-
 		syllable_bank = word_gen() #output random male name
-
 		# print(syllable_bank)
 		name_bank = hyphenate_word(syllable_bank)
-
 		if len(name_bank) > 0:
 			name += game.random_choice(name_bank)
 		# print(name)
