@@ -9,10 +9,11 @@ This code is open-source
 
 # import modules
 import lib.stellagama as game
-import sys, argparse, re
+import sys, argparse, re, time, random
 from string import Template
 from lib.worldgen import world
 from lib.hyphenate import hyphenate_word
+from lib.wordplay import create_word
 
 # command line control system
 
@@ -575,16 +576,9 @@ def word_gen(): #input character sex
 	"""
 	randomly create a syllable from a random list of syllables
 	"""
-	name_source = name=""
-	name_source =  game.random_choice([
-		"names/englishsyllables.txt",
-		"names/frenchsyllables.txt",
-		"names/irishsyllables.txt",
-		"names/italiansyllables.txt",
-		# "names/latinwords.txt",
-		"names/spanishsyllables.txt",
-	])
-	name += game.random_line(name_source)
+
+	name = create_word(args)
+
 	return name.capitalize()
 
 def name_gen(sex, race): #input character sex
@@ -622,8 +616,6 @@ def surname_gen(): #input character sex
 	"""
 	randomly create a name from a list of names
 	"""
-
-	# return game.random_line("surnames.txt")
 
 	name=""
 	name_bank = {}
@@ -828,11 +820,9 @@ class character:
 		self.rank = 0
 		self.race = game.random_choice(Races)
 		self.birth_world = world()
-		self.birth_world_name = surname_gen()
 		self.birth_upp = self.birth_world.upp
 		self.birth_starport = self.birth_world.starport
 		self.discharge_world = world()
-		self.discharge_world_name = surname_gen()
 		self.discharge_starport = self.discharge_world.starport
 		self.discharge_upp = self.discharge_world.upp
 		self.psionic_trained = "no"
@@ -844,8 +834,14 @@ class character:
 		self.title = ""
 		self.status = ""
 		self.sex = game.random_choice(["male", "female"])
-		self.name = name_gen(self.sex, self.race)
-		self.surname = surname_gen()
+
+		start_seed = time.time()
+		random.seed(start_seed)
+
+		self.birth_world_name =     word_gen()
+		self.discharge_world_name = word_gen()
+		self.name =                 word_gen()
+		self.surname =              word_gen()
 		self.career = career_choice(self.upp)
 		self.age = 18
 

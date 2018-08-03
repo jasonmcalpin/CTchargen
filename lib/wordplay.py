@@ -6,7 +6,7 @@
 
 #import modules
 import random, argparse, time
-import stellagama as game
+import lib.stellagama as game
 
 
 
@@ -94,17 +94,17 @@ class Wordplay:
 		while current_syllable <= number_of_syllables:
 			# size of each syllable
 			syllable_size = game.random_choice(self.syllable_size_list)
-			print (syllable_size + 1)
+			# print (syllable_size + 1)
 			current_word_syllables.extend (game.random_choice(self.syllable_styles[syllable_size]) )
 			# current_word_syllables.extend(",")
 			current_syllable += 1
-			print(current_word_syllables)
+			# print(current_word_syllables)
 
 		#clean up odd letter choices.
 		# compare current and next sounds if they match combine.
 		current_sound = 0
 		while current_sound < len(current_word_syllables):
-			print(current_word_syllables)
+			# print(current_word_syllables)
 
 			current_letter = current_word_syllables[current_sound]
 			next_letter = current_word_syllables[current_sound+1] if current_sound + 1 < len(current_word_syllables) else 'x'
@@ -143,11 +143,15 @@ class Wordplay:
 
 		return current_word_syllables
 
-	def create_seed(self):
-		if args.seed:
-			self.random_seed = args.seed
+	def create_seed(self, args, seed):
+		
+		if seed and seed != 'A-1234567':
+			self.random_seed = seed
 		else:
-			self.random_seed = time.strftime("%H:%M:%S", time.gmtime())
+			if args.seed:
+				self.random_seed = args.seed
+			else:
+				self.random_seed = time.time()
 
 		random.seed(self.random_seed)
 
@@ -161,56 +165,57 @@ class Wordplay:
 		# work
 		return 'create_singleton_consonants'
 
-	def create_word(self):
-
-		self.create_seed()
+	def create_word(self, args, seed='A-1234567'):
+		self.word = ''
+		self.create_seed(args, seed)
 
 		# number of syllables
 		self.number_of_syllables = game.random_choice(self.syllable_length)
-		print (self.number_of_syllables)
+		# print (self.number_of_syllables)
 		
 
 		# create array of syllables
 
 		current_word_syllables = self.create_syllables(self.number_of_syllables)
 
-		print(current_word_syllables)
+		# print(current_word_syllables)
+
 		for current_letter in current_word_syllables:
 			if current_letter == 'v':
 				letter = game.random_choice(self.vowels)
 				self.word += letter
 				self.word_pronouced += letter
-				print (self.word)
+				# print (self.word)
 			elif current_letter == 'vv':
 				letter = game.random_choice(self.voiced_vowels)
 				self.word += letter
 				self.word_pronouced += letter
-				print (self.word)
+				# print (self.word)
 
 			elif current_letter == 'c':
 				letter = game.random_choice(self.voiceless_consonants)
 				self.word += letter
 				self.word_pronouced += letter
-				print (self.word)
+				# print (self.word)
 
 			elif current_letter == 'cc':
 				letter = game.random_choice(self.voiced_consonants)
 				self.word += letter
 				self.word_pronouced += letter
-				print (self.word)
+				# print (self.word)
 
 			elif current_letter == ",":
 				self.word_pronouced += current_letter
-				print (self.word)
+				# print (self.word)
 			else:
 				self.word += current_letter
 				self.word_pronouced += current_letter
 
 
-		print('word: '+ self.word)
-		print('pronouced: '+ self.word_pronouced)
-
-		return '\n\ncreate_word finished'
+		# print('word: '+ self.word)
+		# print('pronouced: '+ self.word_pronouced)
+		# print ('name is: '+ self.word)
+		return self.word
 
 
 wordplay = Wordplay()
@@ -221,4 +226,4 @@ if __name__ == '__main__':
 	parser.add_argument('-s','--seed',help='seed with Homeworld UPP code')
 	args = parser.parse_args()
 
-	print(wordplay.create_word())
+	print(wordplay.create_word(args))
