@@ -5,7 +5,7 @@
 # contact me at golan2072@gmail.com
 
 #import modules
-import random, argparse, time
+import random, argparse, time, json
 import lib.stellagama as game
 
 
@@ -23,66 +23,31 @@ class Wordplay:
 		self.word_pronouced =   ''
 		self.number_of_syllables = 1
 		self.random_seed =      '1234'
-		self.syllables =        ['Sv','Sv','Sv','v','v','v','v','v','v','v','c','c','c','c','c','c','c','c','c','c','c','c','c','c','c','c','v','v','v','v','v','v','v','Sc','Sc','Sc']
-		self.syllable_length =  [1,1,1,3,3,3,3,3,3,3,2,2,2,2,2,2,2,2,2,2,2,2,2,2,2,2,3,3,3,3,3,3,3,4,4,4]
-		self.syllable_size_list =  [0,0,0,2,2,2,2,2,2,2,1,1,1,1,1,1,1,1,1,1,1,1,1,1,1,1,2,2,2,2,2,2,2,3,3,3]
+		self.syllable_length =  []
+		self.syllable_size_list =  []
 
-		self.vowels =               ['a','e','i','o','u']
-		self.voiced_vowels =        ['ay','ya','oy','ee','ea','ou','oo','ow']
-		self.consonants =           ['b','ch','d','f','g','h','j','k','l','m','n','p','r','s','t','v','w','y','z']
-		self.voiced_consonants =    ['b', 'd', 'g', 'j', 'l', 'm', 'n', 'ng', 'r', 'sz', 'th','v', 'w', 'y', 'z']
-		self.voiceless_consonants = ['ch', 'f', 'k', 'p', 's', 'sh', 't', 'th']
+		self.vowels =               []
+		self.voiced_vowels =        []
+		self.voiced_consonants =    []
+		self.voiceless_consonants = []
 
-		self.syllable_styles = [
-				[
-					['v'],
-					['c']
-				],
-				[
-					['cc'],
-					['v','c'],
-					['c','v'],
-					['vv']
-				],
-				[
-					['c','vv'],
-					['cc','v'],
-					['cc','c'],
-					['c','cc'],
-					['v','cc'],
-					['vv','c'],
-					['vv','v'],
-					['v','vv'],
-					['c','v','c'],
-					['v','c','v']
-				],
-				[
-					['c','vv','v'],
-					['c','v','vv'],
-					['cc','v','v'],
-					['cc','c','v'],
-					['c','cc','v'],
-					['cc','c','c'],
-					['c','cc','c'],
-					['c','v','cc'],
-					['cc','v','c'],
-					['c','vv','c'],
-					['v','cc','c'],
-					['v','c','cc'],
-					['vv','cc'],
-					['vv','v','c'],
-					['vv','vv'],
-					['v','vv','v'],
-					['v','c','vv'],
-					['vv','c','v'],
-					['v','cc','v']
-				]
-			]
+		self.syllable_styles = []
 
 
 
 		self.language_syllable_styles=[]
 
+	def load_dictionary (self):
+		with open('data/syllable_starter.json') as syllable_rules:
+			data = json.load(syllable_rules)
+
+		self.syllable_length = data['syllable_length']
+		self.syllable_size_list = data['syllable_size_list']
+		self.vowels = data['vowels']
+		self.voiced_vowels = data['voiced_vowels']
+		self.voiced_consonants = data['voiced_consonants']
+		self.voiceless_consonants = data['voiceless_consonants']
+		self.syllable_styles = data['syllable_styles']
 
 
 	def create_syllables(self, number_of_syllables):
@@ -90,7 +55,7 @@ class Wordplay:
 		current_syllable = 1
 		syllable_size = 1
 		current_word_syllables = []
-		
+
 		while current_syllable <= number_of_syllables:
 			# size of each syllable
 			syllable_size = game.random_choice(self.syllable_size_list)
@@ -108,7 +73,7 @@ class Wordplay:
 
 			current_letter = current_word_syllables[current_sound]
 			next_letter = current_word_syllables[current_sound+1] if current_sound + 1 < len(current_word_syllables) else 'x'
-			
+
 			if current_letter == 'v' and next_letter == 'v':
 				del(current_word_syllables[current_sound + 1])
 				current_word_syllables[current_sound] = game.random_choice(['v','vv'])
@@ -144,7 +109,7 @@ class Wordplay:
 		return current_word_syllables
 
 	def create_seed(self, args, seed):
-		
+
 		if seed and seed != 'A-1234567':
 			self.random_seed = seed
 		else:
@@ -166,13 +131,16 @@ class Wordplay:
 		return 'create_singleton_consonants'
 
 	def create_word(self, args, seed='A-1234567'):
+		
+		self.load_dictionary ()
+
 		self.word = ''
 		self.create_seed(args, seed)
 
 		# number of syllables
 		self.number_of_syllables = game.random_choice(self.syllable_length)
 		# print (self.number_of_syllables)
-		
+
 
 		# create array of syllables
 
