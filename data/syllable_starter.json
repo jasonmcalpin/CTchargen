@@ -92,7 +92,11 @@
       "oo",
       "ow",
       "ie",
-      "ei"
+      "ei",
+      "oi",
+      "oa",
+      "yo",
+      "ue"
    ],
    "voiced_consonants": [
       "b",
@@ -116,7 +120,14 @@
       "dg",
       "rr",
       "sc",
-      "tr"
+      "tr",
+      "ld",
+      "br",
+      "gl",
+      "zh",
+      "rd",
+      "hr"
+      
    ],
    "voiceless_consonants": [
       "ch",
@@ -131,7 +142,8 @@
       "ss",
       "gh",
       "tch",
-      "sp"
+      "sp",
+      "st"
    ],
    "syllable_styles": [
       [

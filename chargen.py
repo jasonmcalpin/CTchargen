@@ -17,800 +17,13 @@ from lib.wordplay import create_word
 
 # command line control system
 
-parser = argparse.ArgumentParser(description='Create Traveller characters. They will be posted to a file or the screen.')
-
-parser.add_argument('-c', '--char', type=int, help='Number of characters to generate.')
-parser.add_argument('-f', '--file',           help='Save characters to this file name.')
-parser.add_argument('-t', '--template',       help='Template name without the .template extension or spaces in name. Default is text.')
-parser.add_argument('-s', '--seed',           help='seed in the form of a UPP code')
-
-args = parser.parse_args()
-
-Races=[
-	"Aslan",
-	"Droyne",
-	"Hiver",
-	"Humaniti",
-	"K'kree",
-	"Vargr",
-	"Solomani",
-	"Vilani",
-	"Zhodani",
-	"Imperial",
-	"Darrian",
-	"Geonee",
-	"Suerrat"
-]
-
-# career data
-
-Navy={
-	"name": "Navy",
-	"enlistment": 8,
-	"enlistment DM+1": 3,
-	"enlistment DM+1 level": 8,
-	"enlistment DM+2": 4,
-	"enlistment DM+2 level": 9,
-	"survival": 5,
-	"survival DM+1": 3,
-	"survival DM+1 level": 7,
-	"commission": 10,
-	"commission DM+1": 5,
-	"commission DM+1 level": 9,
-	"promotion": 8,
-	"promotion DM+1": 4,
-	"promotion DM+1 level": 8,
-	"reenlist": 6,
-	"ranks": [
-		"Starman",
-		"Ensign",
-		"Lieutenant",
-		"Lt Commander",
-		"Commander",
-		"Captain",
-		"Admiral"
-	], 
-	"muster": [
-		"Low Passage",
-		"+1 INT",
-		"+2 EDU",
-		"Blade",
-		"TAS",
-		"High Passage",
-		"+2 SOC"
-	], 
-	"cash": [
-		1000,
-		5000,
-		5000,
-		10000,
-		20000,
-		50000,
-		50000
-	],
-	"personal": [
-		"+1 STR",
-		"+1 DEX",
-		"+1 END",
-		"+1 INT",
-		"+1 EDU",
-		"+1 SOC"
-	], 
-	"service": [
-		"Ship's Boat",
-		"Vacc Suit",
-		"Forward Obs",
-		"Gunnery",
-		"Blade Combat",
-		"Gun Combat"
-	], 
-	"advanced": [
-		"Vacc Suit",
-		"Mechanical",
-		"Electronics",
-		"Engineering",
-		"Gunnery",
-		"J-o-T"
-	], 
-	"advanced 2": [
-		"Medical",
-		"Navigation",
-		"Engineering",
-		 "Computer",
-		 "Pilot",
-		 "Admin"
-	 ], 
-	 "rank skills": {
-		 5:"+1 Soc", 
-		 6: "+1 SOC"
-	 }
-}
-
-Marines={
-	"name": "Marines",
-	"enlistment": 9,
-	"enlistment DM+1": 3,
-	"enlistment DM+1 level": 8,
-	"enlistment DM+2": 0,
-	"enlistment DM+2 level": 8,
-	"survival": 6,
-	"survival DM+1": 2,
-	"survival DM+1 level": 8,
-	"commission": 9,
-	"commission DM+1": 4,
-	"commission DM+1 level": 7,
-	"promotion": 9,
-	"promotion DM+1": 5,
-	"promotion DM+1 level": 8,
-	"reenlist": 6,
-	"ranks": [
-		"Trooper",
-		"Lieutenant",
-		"Captain",
-		"Force Cmdr",
-		"Lt Colonel",
-		"Colonel",
-		"Brigadier"
-	],
-	"muster": [
-		"Low Passage",
-		"+2 INT",
-		"+1 EDU",
-		"Blade",
-		"TAS",
-		"High Passage",
-		"+2 SOC"
-	],
-	"cash": [
-		1000,
-		5000,
-		5000,
-		10000,
-		20000,
-		30000,
-		40000
-	],
-	"personal": [
-		"+1 STR",
-		"+1 DEX",
-		"+1 END",
-		"Gambling",
-		"Brawling",
-		"Blade Cbt"
-	],
-	"service": [
-		"ATV",
-		"Mechanical",
-		"Electronic",
-		"Tactics",
-		"Blade Cbt",
-		"Gun Combat"
-	],
-	"advanced": [
-		"Vehicle",
-		"Mechanical",
-		"Electronic",
-		"Tactics",
-		"Blade Cbt",
-		"Gun Combat"
-	],
-	"advanced 2": [
-		"Medical",
-		"Tactics",
-		"Tactics",
-		"Computer",
-		"Leader",
-		"Admin"
-	],
-	"rank skills":{
-		0:"Cutlass",
-		1:"Revolver"
-	}
-}
-
-Army={
-	"name": "Army",
-	"enlistment": 5,
-	"enlistment DM+1": 1,
-	"enlistment DM+1 level": 6,
-	"enlistment DM+2": 2,
-	"enlistment DM+2 level": 5,
-	"survival": 5,
-	"survival DM+1": 4,
-	"survival DM+1 level": 6,
-	"commission": 5,
-	"commission DM+1": 1,
-	"commission DM+1 level": 7,
-	"promotion": 6,
-	"promotion DM+1": 4,
-	"promotion DM+1 level": 7,
-	"reenlist": 7,
-	"ranks": [
-		"Private",
-		"Lieutenant",
-		"Captain",
-		"Major",
-		"Lt. Colonel",
-		"Colonel",
-		"General"
-	],
-	"muster": [
-		"Low Passage",
-		"+1 INT",
-		"+2 EDU",
-		"Gun",
-		"High Passage",
-		"Mid Passage",
-		"+1 SOC"
-	],
-	"cash": [
-		2000,
-		5000,
-		10000,
-		10000,
-		10000,
-		20000,
-		30000
-	],
-	"personal": [
-		"+1 STR",
-		"+1 DEX",
-		"+1 END",
-		"Gambling",
-		"+1 EDU",
-		"Brawling"
-	],
-	"service": [
-		"ATV",
-		"Air/Raft",
-		"Gun Combat",
-		"Forward Obs",
-		"Blade Combat",
-		"Gun Combat"
-	],
-	"advanced": [
-		"Vehicle",
-		"Mechanical",
-		"Electronics",
-		"Tactics",
-		"Blade Combat",
-		"Gun Combat"
-	],
-	"advanced 2": [
-		"Medical",
-		"Tactics",
-		"Tactics",
-		"Computer",
-		"Leader",
-		"Admin"
-	],
-	"rank skills": {
-		0:"Rifle",
-		1: "SMG"
-	}
-}
-
-Merchants={
-	"name": "Merchants",
-	"enlistment": 7,
-	"enlistment DM+1": 0,
-	"enlistment DM+1 level": 7,
-	"enlistment DM+2": 3,
-	"enlistment DM+2 level": 6,
-	"survival": 5,
-	"survival DM+1": 3,
-	"survival DM+1 level": 7,
-	"commission": 4,
-	"commission DM+1": 3,
-	"commission DM+1 level": 7,
-	"promotion": 10,
-	"promotion DM+1": 3,
-	"promotion DM+1 level": 9,
-	"reenlist": 4,
-	"ranks": [
-		"Spaceman",
-		"4th Officer",
-		"3rd Officer",
-		"2nd Officer",
-		"1st Officer",
-		"Captain",
-		""
-	],
-	"muster": [
-		"Low Passage",
-		"+1 INT",
-		"+1 EDU",
-		"Blade",
-		"Low Passage",
-		"High Passage",
-		"Free Trader"
-	],
-	"cash": [
-		1000,
-		5000,
-		10000,
-		10000,
-		10000,
-		50000,
-		100000
-	],
-
-	"personal": [
-		"+1 STR",
-		"+1 DEX",
-		"+1 END",
-		"+1 STR",
-		"Blade Combat",
-		"Bribery"
-	],
-	"service": [
-		"Vehicle",
-		"Vacc Suit",
-		"J-o-T",
-		"Steward",
-		"Electronic",
-		"Gun Combat"
-	],
-	"advanced": [
-		"Streetwise",
-		"Mechanical",
-		"Electronic",
-		"Navigation",
-		"Gunnery",
-		"Medical"
-	],
-	"advanced 2": [
-		"Medical",
-		"Navigation",
-		"Engineering",
-		"Computer",
-		"Pilot",
-		"Admin"
-	],
-	"rank skills": {
-		1: "Pilot"
-	}
-}
-
-Scouts={
-	"name": "Scouts",
-	"enlistment": 7,
-	"enlistment DM+1": 3,
-	"enlistment DM+1 level": 6,
-	"enlistment DM+2": 0,
-	"enlistment DM+2 level": 8,
-	"survival": 7,
-	"survival DM+1": 2,
-	"survival DM+1 level": 9,
-	"commission": 12,
-	"commission DM+1": 5,
-	"commission DM+1 level": 9,
-	"promotion": 8,
-	"promotion DM+1": 4,
-	"promotion DM+1 level": 8,
-	"reenlist": 3,
-	"ranks": [
-		"",
-		"",
-		"",
-		"",
-		"",
-		"",
-		""
-	],
-	"muster": [
-		"Low Passage",
-		"+2 INT",
-		"+2 EDU",
-		"Blade",
-		"Gun",
-		"Scout Ship",
-		""
-	],
-	"cash": [
-		20000,
-		20000,
-		30000,
-		30000,
-		50000,
-		50000,
-		50000
-	],
-	"personal": [
-		"+1 STR",
-		"+1 DEX",
-		"+1 END",
-		"+1 INT",
-		"+1 EDU",
-		"Gun Combat"
-	],
-	"service": [
-		"Air/Raft",
-		"Vacc Suit",
-		"Mechanical",
-		"Navigation",
-		"Electronic",
-		"J-o-T"
-	],
-	"advanced": [
-		"Vehicle",
-		"Mechanical",
-		"Electronics",
-		"J-o-T",
-		"Gunnery",
-		"Medical"
-	],
-	"advanced 2": [
-		"Medical",
-		"Navigation",
-		"Engineering",
-		"Computer",
-		"Pilot",
-		"J-o-T"
-	],
-	"rank skills": {
-		0: "Pilot"
-	}
-}
-
-Other={
-	"name": "Other",
-	"enlistment": 3,
-	"enlistment DM+1": 3,
-	"enlistment DM+1 level": 14,
-	"enlistment DM+2": 4,
-	"enlistment DM+2 level": 14,
-	"survival": 5,
-	"survival DM+1": 3,
-	"survival DM+1 level": 9,
-	"commission": 10,
-	"commission DM+1": 5,
-	"commission DM+1 level": 9,
-	"promotion": 8,
-	"promotion DM+1": 4,
-	"promotion DM+1 level": 8,
-	"reenlist": 5,
-	"ranks": [
-		"",
-		"",
-		"",
-		"",
-		"",
-		"",
-		""
-	],
-	"muster": [
-		"Low Passage",
-		"+1 INT",
-		"+1 EDU",
-		"Gun",
-		"High Passage",
-		"",
-		""
-	],
-	"cash": [
-		1000,
-		5000,
-		10000,
-		10000,
-		10000,
-		50000,
-		100000
-	],
-	"personal": [
-		"+1 STR",
-		"+1 DEX",
-		"+1 END",
-		"Blade Combat",
-		"Brawling",
-		"-1 SOC"
-	],
-	"service": [
-		"Vehicle",
-		"Gambling",
-		"Brawling",
-		"Bribery",
-		"Blade Combat",
-		"Gun Combat"
-	],
-	"advanced": [
-		"Streetwise",
-		"Mechanical",
-		"Electronics",
-		"Gambling",
-		"Brawling",
-		"Forgery"
-	],
-	"advanced 2": [
-		"Medical",
-		"Forgery",
-		"Electronic",
-		"Computer",
-		"Streetwise",
-		"J-o-T"
-	],
-	"rank skills": {
-	}
-}
-
-# additional data
-
-guns=[
-	"Body Pistol",
-	"Autopistol",
-	"Revolver",
-	"Carbine",
-	"Rifle",
-	"Autorifle",
-	"Shotgun",
-	"SMG",
-	"Laser Carbine",
-	"Laser Rifle"
-]
-melee=[
-	"Blade",
-	"Foil",
-	"Cutlass",
-	"Sword",
-	"Broadsword",
-	"Bayonet",
-	"Spear",
-	"Halberd",
-	"Pike",
-	"Cudgel"
-]
-vehicles=[
-	"Aircraft (Helicopter)",
-	"Aircraft (Propeller-driven)",
-	"Aircraft (Jet-driven)" "Grav Vehicle",
-	"Tracked Vehicle",
-	"Wheeled Vehicle",
-	"Watercraft (Small Watercraft)",
-	"Watercraft (Large Watercraft)",
-	"Watercraft (Hovercraft)",
-	"Watercraft (Submerisible)"
-]
-
-# functions
-def word_gen(): #input character sex
-	"""
-	randomly create a syllable from a random list of syllables
-	"""
-
-	name = create_word(args)
-
-	return name.capitalize()
-
-def name_gen(sex, race): #input character sex
-	"""
-	randomly create a name from a list of names
-	"""
-	name=""
-	name_bank = []
-	syllable_bank = ""
-	current_syllable = 1
-	number_of_syllables = game.dice(2,2)
-
-	# if sex=="male":
-	# 	syllable_bank = game.random_line("names/englishsyllables.txt") #output random male name
-	# else:
-	# 	syllable_bank = game.random_line("names/englishsyllables.txt") #output random female name
-	# return syllable_bank.capitalize()
-
-	while current_syllable <= number_of_syllables:
-		if sex=="male":
-			syllable_bank = word_gen() #output random male name
-		else:
-			syllable_bank = word_gen() #output random female name
-		
-		name_bank = hyphenate_word(syllable_bank)
-		
-		if len(name_bank) > 0:
-			name += game.random_choice(name_bank)
-
-		current_syllable += 1
-
-	return name.capitalize()
-
-def surname_gen(): #input character sex
-	"""
-	randomly create a name from a list of names
-	"""
-
-	name=""
-	name_bank = {}
-	syllable_bank = ""
-	current_syllable = 0
-	number_of_syllables = game.dice(2,2)
-
-	while current_syllable < number_of_syllables:
-		syllable_bank = word_gen() #output random male name
-		# print(syllable_bank)
-		name_bank = hyphenate_word(syllable_bank)
-		if len(name_bank) > 0:
-			name += game.random_choice(name_bank)
-		# print(name)
-		current_syllable += 1
-
-	return name.capitalize()
-
-def add_skill(skill_list, skill): #inputs the skill dictionary and skill
-	"""
-	adds a skill or characteristic bonus to a character
-	"""
-	if skill=="":
-		return skill_list
-	if skill=="Gun Combat":
-		if game.dice(1,6)>=3:
-			for item in guns:
-				if item in skill_list:
-					skill=item
-				else:
-					skill=game.random_choice(guns)
-		else:
-			skill=game.random_choice(guns)
-	elif skill in ["Blade Combat", "Blade Cbt"]:
-		if game.dice(1,6)>=3:
-			for item in melee:
-				if item in skill_list:
-					skill=item
-				else:
-					skill=game.random_choice(melee)
-		else:
-			skill=game.random_choice(melee)
-	elif skill=="Vehicle":
-		if game.dice(1,6)>=3:
-			for item in vehicles:
-				if item in skill_list:
-					skill=item
-			else:
-				skill=game.random_choice(vehicles)
-		else:
-			skill=game.random_choice(vehicles)
-	if skill in skill_list:
-		skill_list[skill] += 1
-	elif skill not in skill_list:
-		skill_list[skill] = 1
-	return skill_list #outputs the skill dictionary
-def add_psionic_talent(psi_rating, terms):
-	talent_list = ['Telepathy', 'Clairvoyance', 'Telekinesis', 'Awareness', 'Teleportation']
-
-	psionic_training_attempts = 0
-
-	talent_learned =[]
-
-	while 0 < len(talent_list):
-		telepathy_chance     = 4 + psi_rating - psionic_training_attempts - terms
-		clairvoyance_chance  = 3 + psi_rating - psionic_training_attempts - terms
-		telekinesis_chance   = 2 + psi_rating - psionic_training_attempts - terms
-		awareness_chance     = 1 + psi_rating - psionic_training_attempts - terms
-		teleportation_chance = 0 + psi_rating - psionic_training_attempts - terms
-
-		psi_talent_training = game.random_choice(talent_list)
-
-		if psi_talent_training == 'Telepathy':
-			if telepathy_chance > 1:
-				if game.dice(2,6) <= telepathy_chance:
-					talent_list.remove('Telepathy')
-					talent_learned.extend(['Telepathy'])
-					psionic_training_attempts += 1
-				else:
-					psionic_training_attempts += 1
-			else:
-				talent_list.remove('Telepathy')
-
-		if psi_talent_training == 'Clairvoyance':
-			if clairvoyance_chance > 1:
-				if game.dice(2,6) <= clairvoyance_chance:
-					talent_list.remove('Clairvoyance')
-					talent_learned.extend(['Clairvoyance'])
-					psionic_training_attempts += 1
-				else:
-					psionic_training_attempts += 1
-			else:
-				talent_list.remove('Clairvoyance')
-
-		if psi_talent_training == 'Telekinesis':
-			if telekinesis_chance > 1:
-				if game.dice(2,6) <= telekinesis_chance:
-					talent_list.remove('Telekinesis')
-					talent_learned.extend(['Telekinesis'])
-					psionic_training_attempts += 1
-				else:
-					psionic_training_attempts += 1
-			else:
-				talent_list.remove('Telekinesis')
-
-		if psi_talent_training == 'Awareness':
-			if awareness_chance > 1:
-				if game.dice(2,6) <= awareness_chance:
-					talent_list.remove('Awareness')
-					talent_learned.extend(['Awareness'])
-					psionic_training_attempts += 1
-				else:
-					psionic_training_attempts += 1
-			else:
-				talent_list.remove('Awareness')
-
-		if psi_talent_training == 'Teleportation':
-			if teleportation_chance > 1:
-				if game.dice(2,6) <= teleportation_chance:
-					talent_list.remove('Teleportation')
-					talent_learned.extend(['Teleportation'])
-					psionic_training_attempts += 1
-				else:
-					psionic_training_attempts += 1
-			else:
-				talent_list.remove('Teleportation')
-
-	return talent_learned
 
 
 
-
-def add_possession(possessions, item): #inputs the possession dictionary and item
-	"""
-
-	adds a skill or characteristic bonus to a character
-	"""
-	if item=="":
-		return possessions
-	if item=="Blade":
-		item=game.random_choice(melee)
-	if item=="Gun":
-		item=game.random_choice(guns)
-	if item in possessions:
-		possessions[item] += 1
-	elif item not in possessions:
-		possessions[item] = 1
-	return possessions #outputs the skill dictionary
-
-def skill_stringer(input_dict): #input a dictionary
-	"""
-	converts a dictionary to a string, Traveller skill format
-	"""
-	return ', '.join('-'.join((k, str(v))) for k,v in sorted(input_dict.items())) #output formatted skill list string
-
-def array_stringer(input_dict): #input a dictionary
-	"""
-	converts a dictionary to a string, Traveller psionic list format
-	"""
-	return ', '.join(input_dict) #output formatted psionic talent list string
-
-def possession_stringer(input_dict):
-	"""
-	converts a dictionary to a string, Traveller possessions format
-	"""
-	return ', '.join(' x'.join((k, str(v))) for k,v in sorted(input_dict.items())) #output formatted skill list string
-
-def upp_stringer(input_list): #input a characteristics list
-	"""
-	converts a characteristics list to a UPP string
-	"""
-	output_list=[]
-	for item in input_list:
-		output_list.append(str(game.pseudo_hex(item)))
-	return ''.join (output_list) #output a string
-
-def career_choice (upp): #input upp list
-	"""
-	chooses a career based on UPP characteristics.
-	"""
-	if upp[4]==max(upp):
-		career=Navy
-	elif upp[0]==max(upp):
-		career=game.random_choice([Scouts, Marines])
-	elif upp[2]==max(upp):
-		career=Army
-	elif upp[3]==max(upp):
-		career=Merchants
-	else:
-		career=Other
-	return career #outputs the chatacter's career
 
 #classes
 
-class character:
+class Character:
 	"""character generation class"""
 	def __init__ (self):
 		"""generate basic stats"""
@@ -818,7 +31,7 @@ class character:
 		self.skills = {}
 		self.possessions = {}
 		self.rank = 0
-		self.race = game.random_choice(Races)
+		self.race = game.random_choice(self.Races)
 		self.birth_world = world()
 		self.birth_upp = self.birth_world.upp
 		self.birth_starport = self.birth_world.starport
@@ -838,38 +51,38 @@ class character:
 		start_seed = time.time()
 		random.seed(start_seed)
 
-		self.birth_world_name =     word_gen()
-		self.discharge_world_name = word_gen()
-		self.name =                 word_gen()
-		self.surname =              word_gen()
-		self.career = career_choice(self.upp)
+		self.birth_world_name =     ""
+		self.discharge_world_name = ""
+		self.name =                 ""
+		self.surname =              ""
+		self.career =               self.career_choice(self.upp)
 		self.age = 18
 
 		# Test for world values use with -t world
-		self.birth_size = self.birth_world.size,
-		self.birth_atmosphere = self.birth_world.atmosphere,
+		self.birth_size =          self.birth_world.size,
+		self.birth_atmosphere =    self.birth_world.atmosphere,
 		self.birth_hydrographics = self.birth_world.hydrographics,
-		self.birth_population = self.birth_world.population,
-		self.birth_government = self.birth_world.government,
-		self.birth_lawlevel = self.birth_world.lawlevel,
-		self.birth_techlevel = self.birth_world.techlevel,
-		self.birth_tradelevel = self.birth_world.tradelevel
+		self.birth_population =    self.birth_world.population,
+		self.birth_government =    self.birth_world.government,
+		self.birth_lawlevel =      self.birth_world.lawlevel,
+		self.birth_techlevel =     self.birth_world.techlevel,
+		self.birth_tradelevel =    self.birth_world.tradelevel
 		"""enlistment"""
 		enlistment=game.dice(2,6)
 		if self.upp[self.career["enlistment DM+1"]]>=self.career["enlistment DM+1 level"]:
 			enlistment+=1
 		if self.upp[self.career["enlistment DM+2"]]>=self.career["enlistment DM+2 level"]:
 			enlistment+=2
-		if enlistment>=self.career["enlistment"]:
+		if enlistment>= self.career["enlistment"]:
 			self.career=self.career
 		else:
-			self.career=game.random_choice([Navy, Marines, Army, Merchants, Scouts, Other])
+			self.career=game.random_choice([self.Navy, self.Marines, self.Army, self.Merchants, self.Scouts, self.Other])
 		"""career generation loop"""
 		in_career=True
 		while in_career == True:
 			if self.terms==0:
 					if 0 in self.career["rank skills"]:
-						add_skill(self.skills, self.career["rank skills"][0])
+						self.add_skill(self.skills, self.career["rank skills"][0])
 			survival=game.dice(2,6)
 			if self.upp[self.career["survival DM+1"]]>=self.career["survival DM+1 level"]:
 				survival+=1
@@ -882,20 +95,20 @@ class character:
 				in_career=False
 				break
 			"""skill generation"""
-			if self.career in [Scouts, Other]:
+			if self.career in [self.Scouts, self.Other]:
 				for i in range (0,2):
 					skill_table=game.random_choice(["personal", "service", "advanced", "advanced 2"])
-					add_skill(self.skills, game.random_choice(self.career[skill_table]))
+					self.add_skill(self.skills, game.random_choice(self.career[skill_table]))
 			else:
 				if self.terms==1:
 					for i in range (0,2):
 						skill_table=game.random_choice(["personal", "service", "advanced", "advanced 2"])
-						add_skill(self.skills, game.random_choice(self.career[skill_table]))
+						self.add_skill(self.skills, game.random_choice(self.career[skill_table]))
 				else:
 					skill_table=game.random_choice(["personal", "service", "advanced", "advanced 2"])
-					add_skill(self.skills, game.random_choice(self.career[skill_table]))
+					self.add_skill(self.skills, game.random_choice(self.career[skill_table]))
 			"""commission and promotion"""
-			if self.career in [Scouts, Other]:
+			if self.career in [self.Scouts, self.Other]:
 				self.rank=0
 			elif self.rank==0:
 				commission=game.dice(2,6)
@@ -904,9 +117,9 @@ class character:
 				if commission>=self.career["commission"]:
 					self.rank+=1
 					skill_table=game.random_choice(["personal", "service", "advanced", "advanced 2"])
-					add_skill(self.skills, game.random_choice(self.career[skill_table]))
+					self.add_skill(self.skills, game.random_choice(self.career[skill_table]))
 					if self.rank in self.career["rank skills"]:
-						add_skill(self.skills, self.career["rank skills"][self.rank])
+						self.add_skill(self.skills, self.career["rank skills"][self.rank])
 				else:
 					self.rank=self.rank
 			if self.rank>0 and self.rank<6:
@@ -916,9 +129,9 @@ class character:
 				if promotion>=self.career["promotion"]:
 					self.rank+=1
 					skill_table=game.random_choice(["personal", "service", "advanced", "advanced 2"])
-					add_skill(self.skills, game.random_choice(self.career[skill_table]))
+					self.add_skill(self.skills, game.random_choice(self.career[skill_table]))
 					if self.rank in self.career["rank skills"]:
-						add_skill(self.skills, self.career["rank skills"][self.rank])
+						self.add_skill(self.skills, self.career["rank skills"][self.rank])
 				else:
 					self.rank=self.rank
 			"""reenlistment"""
@@ -932,7 +145,7 @@ class character:
 		"""mustering out"""
 		if self.status=="DECEASED":
 			self.possessions={}
-			add_possession(self.possessions, "Grave marker")
+			self.add_possession(self.possessions, "Grave marker")
 		else:
 			muster_throws=self.terms
 			if self.rank in [1,2]:
@@ -949,7 +162,7 @@ class character:
 				if muster_table=="cash" and "Gambling" in self.skills:
 					muster_roll+=1
 				if muster_table=="muster":
-					add_possession(self.possessions, self.career["muster"][muster_roll])
+					self.add_possession(self.possessions, self.career["muster"][muster_roll])
 				elif muster_table=="cash":
 					self.cash+=self.career["cash"][muster_roll]
 
@@ -958,7 +171,7 @@ class character:
 					if game.dice(2, 6) >= 7:
 						self.cash -= 100000
 						self.psionic_trained = "yes"
-						self.psionic_talents = add_psionic_talent(self.psionic_rating, self.terms)
+						self.psionic_talents = self.add_psionic_talent(self.psionic_rating, self.terms)
 		"""characteristic modifications"""
 		for k in list(self.skills.keys()):
 			if k == "+1 STR":
@@ -1051,84 +264,815 @@ class character:
 			if self.skills["Medical"]>=3:
 				self.title="Dr."
 
+	def add_possession(self, possessions, item): #inputs the possession dictionary and item
+		"""
+		adds a skill or characteristic bonus to a character
+		"""
+		if item=="":
+			return possessions
+		if item=="Blade":
+			item=game.random_choice(self.melee)
+		if item=="Gun":
+			item=game.random_choice(self.guns)
+		if item in possessions:
+			possessions[item] += 1
+		elif item not in possessions:
+			possessions[item] = 1
+		return possessions #outputs the skill dictionary
 
-#main program
+	Races=[
+		"Aslan",
+		"Droyne",
+		"Hiver",
+		"Humaniti",
+		"K'kree",
+		"Vargr",
+		"Solomani",
+		"Vilani",
+		"Zhodani",
+		"Imperial",
+		"Darrian",
+		"Geonee",
+		"Suerrat"
+	]
+	guns=[
+		"Body Pistol",
+		"Autopistol",
+		"Revolver",
+		"Carbine",
+		"Rifle",
+		"Autorifle",
+		"Shotgun",
+		"SMG",
+		"Laser Carbine",
+		"Laser Rifle"
+	]
+	melee=[
+		"Blade",
+		"Foil",
+		"Cutlass",
+		"Sword",
+		"Broadsword",
+		"Bayonet",
+		"Spear",
+		"Halberd",
+		"Pike",
+		"Cudgel"
+	]
+	vehicles=[
+		"Aircraft (Helicopter)",
+		"Aircraft (Propeller-driven)",
+		"Aircraft (Jet-driven)" "Grav Vehicle",
+		"Tracked Vehicle",
+		"Wheeled Vehicle",
+		"Watercraft (Small Watercraft)",
+		"Watercraft (Large Watercraft)",
+		"Watercraft (Hovercraft)",
+		"Watercraft (Submerisible)"
+	]
 
-#data basics
-number_of_runs = 1
+	def skill_stringer(self, input_dict): #input a dictionary
+		"""
+		converts a dictionary to a string, Traveller skill format
+		"""
+		return ', '.join('-'.join((k, str(v))) for k,v in sorted(input_dict.items())) #output formatted skill list string
 
-print_template    = 'templates'
-print_extension   = 'txt'
-file_name         = ''
-template_name     = print_template + '/text.template'
+	def array_stringer(self, input_dict): #input a dictionary
+		"""
+		converts a dictionary to a string, Traveller psionic list format
+		"""
+		return ', '.join(input_dict) #output formatted psionic talent list string
+
+	def possession_stringer(self, input_dict):
+		"""
+		converts a dictionary to a string, Traveller possessions format
+		"""
+		return ', '.join(' x'.join((k, str(v))) for k,v in sorted(input_dict.items())) #output formatted skill list string
+
+	def upp_stringer(self, input_list): #input a characteristics list
+		"""
+		converts a characteristics list to a UPP string
+		"""
+		output_list=[]
+		for item in input_list:
+			output_list.append(str(game.pseudo_hex(item)))
+		return ''.join (output_list) #output a string
+
+	def add_psionic_talent(self, psi_rating, terms):
+		talent_list = ['Telepathy', 'Clairvoyance', 'Telekinesis', 'Awareness', 'Teleportation']
+
+		psionic_training_attempts = 0
+
+		talent_learned =[]
+
+		while 0 < len(talent_list):
+			telepathy_chance     = 4 + psi_rating - psionic_training_attempts - terms
+			clairvoyance_chance  = 3 + psi_rating - psionic_training_attempts - terms
+			telekinesis_chance   = 2 + psi_rating - psionic_training_attempts - terms
+			awareness_chance     = 1 + psi_rating - psionic_training_attempts - terms
+			teleportation_chance = 0 + psi_rating - psionic_training_attempts - terms
+
+			psi_talent_training = game.random_choice(talent_list)
+
+			if psi_talent_training == 'Telepathy':
+				if telepathy_chance > 1:
+					if game.dice(2,6) <= telepathy_chance:
+						talent_list.remove('Telepathy')
+						talent_learned.extend(['Telepathy'])
+						psionic_training_attempts += 1
+					else:
+						psionic_training_attempts += 1
+				else:
+					talent_list.remove('Telepathy')
+
+			if psi_talent_training == 'Clairvoyance':
+				if clairvoyance_chance > 1:
+					if game.dice(2,6) <= clairvoyance_chance:
+						talent_list.remove('Clairvoyance')
+						talent_learned.extend(['Clairvoyance'])
+						psionic_training_attempts += 1
+					else:
+						psionic_training_attempts += 1
+				else:
+					talent_list.remove('Clairvoyance')
+
+			if psi_talent_training == 'Telekinesis':
+				if telekinesis_chance > 1:
+					if game.dice(2,6) <= telekinesis_chance:
+						talent_list.remove('Telekinesis')
+						talent_learned.extend(['Telekinesis'])
+						psionic_training_attempts += 1
+					else:
+						psionic_training_attempts += 1
+				else:
+					talent_list.remove('Telekinesis')
+
+			if psi_talent_training == 'Awareness':
+				if awareness_chance > 1:
+					if game.dice(2,6) <= awareness_chance:
+						talent_list.remove('Awareness')
+						talent_learned.extend(['Awareness'])
+						psionic_training_attempts += 1
+					else:
+						psionic_training_attempts += 1
+				else:
+					talent_list.remove('Awareness')
+
+			if psi_talent_training == 'Teleportation':
+				if teleportation_chance > 1:
+					if game.dice(2,6) <= teleportation_chance:
+						talent_list.remove('Teleportation')
+						talent_learned.extend(['Teleportation'])
+						psionic_training_attempts += 1
+					else:
+						psionic_training_attempts += 1
+				else:
+					talent_list.remove('Teleportation')
+
+		return talent_learned
+	def career_choice (self, upp): #input upp list
+		"""
+		chooses a career based on UPP characteristics.
+		"""
+		if upp[4]==max(upp):
+			career=self.Navy
+		elif upp[0]==max(upp):
+			career=game.random_choice([self.Scouts, self.Marines])
+		elif upp[2]==max(upp):
+			career=self.Army
+		elif upp[3]==max(upp):
+			career=self.Merchants
+		else:
+			career=self.Other
+		return career #outputs the chatacter's career
 
 
-if args.char:
-	if args.char >= 1:
-		number_of_runs = args.char
+	def add_skill(self, skill_list, skill): #inputs the skill dictionary and skill
+		"""
+		adds a skill or characteristic bonus to a character
+		"""
+		if skill=="":
+			return skill_list
+		if skill=="Gun Combat":
+			if game.dice(1,6)>=3:
+				for item in self.guns:
+					if item in skill_list:
+						skill=item
+					else:
+						skill=game.random_choice(self.guns)
+			else:
+				skill=game.random_choice(self.guns)
+		elif skill in ["Blade Combat", "Blade Cbt"]:
+			if game.dice(1,6)>=3:
+				for item in self.melee:
+					if item in skill_list:
+						skill=item
+					else:
+						skill=game.random_choice(self.melee)
+			else:
+				skill=game.random_choice(self.melee)
+		elif skill=="Vehicle":
+			if game.dice(1,6)>=3:
+				for item in self.vehicles:
+					if item in skill_list:
+						skill=item
+				else:
+					skill=game.random_choice(self.vehicles)
+			else:
+				skill=game.random_choice(self.vehicles)
+		if skill in skill_list:
+			skill_list[skill] += 1
+		elif skill not in skill_list:
+			skill_list[skill] = 1
+		return skill_list #outputs the skill dictionary
+
+	def word_gen(self, args): #input character sex
+		"""
+		randomly create a syllable from a random list of syllables
+		"""
+		name = create_word(args)
+		return name.capitalize()
+
+	Navy={
+		"name": "Navy",
+		"enlistment": 8,
+		"enlistment DM+1": 3,
+		"enlistment DM+1 level": 8,
+		"enlistment DM+2": 4,
+		"enlistment DM+2 level": 9,
+		"survival": 5,
+		"survival DM+1": 3,
+		"survival DM+1 level": 7,
+		"commission": 10,
+		"commission DM+1": 5,
+		"commission DM+1 level": 9,
+		"promotion": 8,
+		"promotion DM+1": 4,
+		"promotion DM+1 level": 8,
+		"reenlist": 6,
+		"ranks": [
+			"Starman",
+			"Ensign",
+			"Lieutenant",
+			"Lt Commander",
+			"Commander",
+			"Captain",
+			"Admiral"
+		], 
+		"muster": [
+			"Low Passage",
+			"+1 INT",
+			"+2 EDU",
+			"Blade",
+			"TAS",
+			"High Passage",
+			"+2 SOC"
+		], 
+		"cash": [
+			1000,
+			5000,
+			5000,
+			10000,
+			20000,
+			50000,
+			50000
+		],
+		"personal": [
+			"+1 STR",
+			"+1 DEX",
+			"+1 END",
+			"+1 INT",
+			"+1 EDU",
+			"+1 SOC"
+		], 
+		"service": [
+			"Ship's Boat",
+			"Vacc Suit",
+			"Forward Obs",
+			"Gunnery",
+			"Blade Combat",
+			"Gun Combat"
+		], 
+		"advanced": [
+			"Vacc Suit",
+			"Mechanical",
+			"Electronics",
+			"Engineering",
+			"Gunnery",
+			"J-o-T"
+		], 
+		"advanced 2": [
+			"Medical",
+			"Navigation",
+			"Engineering",
+			 "Computer",
+			 "Pilot",
+			 "Admin"
+		 ], 
+		 "rank skills": {
+			 5:"+1 Soc", 
+			 6: "+1 SOC"
+		 }
+	}
+
+	Marines={
+		"name": "Marines",
+		"enlistment": 9,
+		"enlistment DM+1": 3,
+		"enlistment DM+1 level": 8,
+		"enlistment DM+2": 0,
+		"enlistment DM+2 level": 8,
+		"survival": 6,
+		"survival DM+1": 2,
+		"survival DM+1 level": 8,
+		"commission": 9,
+		"commission DM+1": 4,
+		"commission DM+1 level": 7,
+		"promotion": 9,
+		"promotion DM+1": 5,
+		"promotion DM+1 level": 8,
+		"reenlist": 6,
+		"ranks": [
+			"Trooper",
+			"Lieutenant",
+			"Captain",
+			"Force Cmdr",
+			"Lt Colonel",
+			"Colonel",
+			"Brigadier"
+		],
+		"muster": [
+			"Low Passage",
+			"+2 INT",
+			"+1 EDU",
+			"Blade",
+			"TAS",
+			"High Passage",
+			"+2 SOC"
+		],
+		"cash": [
+			1000,
+			5000,
+			5000,
+			10000,
+			20000,
+			30000,
+			40000
+		],
+		"personal": [
+			"+1 STR",
+			"+1 DEX",
+			"+1 END",
+			"Gambling",
+			"Brawling",
+			"Blade Cbt"
+		],
+		"service": [
+			"ATV",
+			"Mechanical",
+			"Electronic",
+			"Tactics",
+			"Blade Cbt",
+			"Gun Combat"
+		],
+		"advanced": [
+			"Vehicle",
+			"Mechanical",
+			"Electronic",
+			"Tactics",
+			"Blade Cbt",
+			"Gun Combat"
+		],
+		"advanced 2": [
+			"Medical",
+			"Tactics",
+			"Tactics",
+			"Computer",
+			"Leader",
+			"Admin"
+		],
+		"rank skills":{
+			0:"Cutlass",
+			1:"Revolver"
+		}
+	}
+
+	Army={
+		"name": "Army",
+		"enlistment": 5,
+		"enlistment DM+1": 1,
+		"enlistment DM+1 level": 6,
+		"enlistment DM+2": 2,
+		"enlistment DM+2 level": 5,
+		"survival": 5,
+		"survival DM+1": 4,
+		"survival DM+1 level": 6,
+		"commission": 5,
+		"commission DM+1": 1,
+		"commission DM+1 level": 7,
+		"promotion": 6,
+		"promotion DM+1": 4,
+		"promotion DM+1 level": 7,
+		"reenlist": 7,
+		"ranks": [
+			"Private",
+			"Lieutenant",
+			"Captain",
+			"Major",
+			"Lt. Colonel",
+			"Colonel",
+			"General"
+		],
+		"muster": [
+			"Low Passage",
+			"+1 INT",
+			"+2 EDU",
+			"Gun",
+			"High Passage",
+			"Mid Passage",
+			"+1 SOC"
+		],
+		"cash": [
+			2000,
+			5000,
+			10000,
+			10000,
+			10000,
+			20000,
+			30000
+		],
+		"personal": [
+			"+1 STR",
+			"+1 DEX",
+			"+1 END",
+			"Gambling",
+			"+1 EDU",
+			"Brawling"
+		],
+		"service": [
+			"ATV",
+			"Air/Raft",
+			"Gun Combat",
+			"Forward Obs",
+			"Blade Combat",
+			"Gun Combat"
+		],
+		"advanced": [
+			"Vehicle",
+			"Mechanical",
+			"Electronics",
+			"Tactics",
+			"Blade Combat",
+			"Gun Combat"
+		],
+		"advanced 2": [
+			"Medical",
+			"Tactics",
+			"Tactics",
+			"Computer",
+			"Leader",
+			"Admin"
+		],
+		"rank skills": {
+			0:"Rifle",
+			1: "SMG"
+		}
+	}
+
+	Merchants={
+		"name": "Merchants",
+		"enlistment": 7,
+		"enlistment DM+1": 0,
+		"enlistment DM+1 level": 7,
+		"enlistment DM+2": 3,
+		"enlistment DM+2 level": 6,
+		"survival": 5,
+		"survival DM+1": 3,
+		"survival DM+1 level": 7,
+		"commission": 4,
+		"commission DM+1": 3,
+		"commission DM+1 level": 7,
+		"promotion": 10,
+		"promotion DM+1": 3,
+		"promotion DM+1 level": 9,
+		"reenlist": 4,
+		"ranks": [
+			"Spaceman",
+			"4th Officer",
+			"3rd Officer",
+			"2nd Officer",
+			"1st Officer",
+			"Captain",
+			""
+		],
+		"muster": [
+			"Low Passage",
+			"+1 INT",
+			"+1 EDU",
+			"Blade",
+			"Low Passage",
+			"High Passage",
+			"Free Trader"
+		],
+		"cash": [
+			1000,
+			5000,
+			10000,
+			10000,
+			10000,
+			50000,
+			100000
+		],
+
+		"personal": [
+			"+1 STR",
+			"+1 DEX",
+			"+1 END",
+			"+1 STR",
+			"Blade Combat",
+			"Bribery"
+		],
+		"service": [
+			"Vehicle",
+			"Vacc Suit",
+			"J-o-T",
+			"Steward",
+			"Electronic",
+			"Gun Combat"
+		],
+		"advanced": [
+			"Streetwise",
+			"Mechanical",
+			"Electronic",
+			"Navigation",
+			"Gunnery",
+			"Medical"
+		],
+		"advanced 2": [
+			"Medical",
+			"Navigation",
+			"Engineering",
+			"Computer",
+			"Pilot",
+			"Admin"
+		],
+		"rank skills": {
+			1: "Pilot"
+		}
+	}
+
+	Scouts={
+		"name": "Scouts",
+		"enlistment": 7,
+		"enlistment DM+1": 3,
+		"enlistment DM+1 level": 6,
+		"enlistment DM+2": 0,
+		"enlistment DM+2 level": 8,
+		"survival": 7,
+		"survival DM+1": 2,
+		"survival DM+1 level": 9,
+		"commission": 12,
+		"commission DM+1": 5,
+		"commission DM+1 level": 9,
+		"promotion": 8,
+		"promotion DM+1": 4,
+		"promotion DM+1 level": 8,
+		"reenlist": 3,
+		"ranks": [
+			"",
+			"",
+			"",
+			"",
+			"",
+			"",
+			""
+		],
+		"muster": [
+			"Low Passage",
+			"+2 INT",
+			"+2 EDU",
+			"Blade",
+			"Gun",
+			"Scout Ship",
+			""
+		],
+		"cash": [
+			20000,
+			20000,
+			30000,
+			30000,
+			50000,
+			50000,
+			50000
+		],
+		"personal": [
+			"+1 STR",
+			"+1 DEX",
+			"+1 END",
+			"+1 INT",
+			"+1 EDU",
+			"Gun Combat"
+		],
+		"service": [
+			"Air/Raft",
+			"Vacc Suit",
+			"Mechanical",
+			"Navigation",
+			"Electronic",
+			"J-o-T"
+		],
+		"advanced": [
+			"Vehicle",
+			"Mechanical",
+			"Electronics",
+			"J-o-T",
+			"Gunnery",
+			"Medical"
+		],
+		"advanced 2": [
+			"Medical",
+			"Navigation",
+			"Engineering",
+			"Computer",
+			"Pilot",
+			"J-o-T"
+		],
+		"rank skills": {
+			0: "Pilot"
+		}
+	}
+
+	Other={
+		"name": "Other",
+		"enlistment": 3,
+		"enlistment DM+1": 3,
+		"enlistment DM+1 level": 14,
+		"enlistment DM+2": 4,
+		"enlistment DM+2 level": 14,
+		"survival": 5,
+		"survival DM+1": 3,
+		"survival DM+1 level": 9,
+		"commission": 10,
+		"commission DM+1": 5,
+		"commission DM+1 level": 9,
+		"promotion": 8,
+		"promotion DM+1": 4,
+		"promotion DM+1 level": 8,
+		"reenlist": 5,
+		"ranks": [
+			"",
+			"",
+			"",
+			"",
+			"",
+			"",
+			""
+		],
+		"muster": [
+			"Low Passage",
+			"+1 INT",
+			"+1 EDU",
+			"Gun",
+			"High Passage",
+			"",
+			""
+		],
+		"cash": [
+			1000,
+			5000,
+			10000,
+			10000,
+			10000,
+			50000,
+			100000
+		],
+		"personal": [
+			"+1 STR",
+			"+1 DEX",
+			"+1 END",
+			"Blade Combat",
+			"Brawling",
+			"-1 SOC"
+		],
+		"service": [
+			"Vehicle",
+			"Gambling",
+			"Brawling",
+			"Bribery",
+			"Blade Combat",
+			"Gun Combat"
+		],
+		"advanced": [
+			"Streetwise",
+			"Mechanical",
+			"Electronics",
+			"Gambling",
+			"Brawling",
+			"Forgery"
+		],
+		"advanced 2": [
+			"Medical",
+			"Forgery",
+			"Electronic",
+			"Computer",
+			"Streetwise",
+			"J-o-T"
+		],
+		"rank skills": {
+		}
+	}
+
+	def create_character(self, args):
+
+		#main program
+
+		#data basics
+		number_of_runs = 1
+
+		print_template    = 'templates'
+		print_extension   = 'txt'
+		file_name         = ''
+		template_name     = print_template + '/text.template'
 
 
-if args.template:
-	if args.template == 'markdown':
-		print_extension = 'md'
-		template_name = print_template + '/' + args.template + '.template'
-	else:
-		print_extension = 'txt'
-		template_name = print_template + '/' + args.template + '.template'
+		if args.char:
+			if args.char >= 1:
+				number_of_runs = args.char
 
 
-filein = open( template_name )
-character_sheet = Template( filein.read() )
-
-if args.file:
-	file_name = args.file + '.' + print_extension
-
-if file_name:
-	sys.stdout = open(file_name, "w")
-
-
-for x in range(number_of_runs):
-	character1=character()
-	print (
-		character_sheet.substitute(
-			title = character1.title, 
-			name = character1.name, 
-			surname = character1.surname, 
-			race = character1.race,
-			sex = character1.sex,
-			upp = upp_stringer(character1.upp), 
-			age = character1.age, 
-			birth_world_name = character1.birth_world_name,
-			birth_starport = character1.birth_starport,
-			birth_upp = upp_stringer(character1.birth_upp),
-			discharge_world_name = character1.discharge_world_name,
-			discharge_starport = character1.discharge_starport,
-			discharge_upp = upp_stringer(character1.discharge_upp),
-			psionic_trained = character1.psionic_trained,
-			psionic_rating = character1.psionic_rating,
-			psionic_talents = array_stringer(character1.psionic_talents),
-			tas_member = character1.tas_member,
-			career_name = character1.career["name"], 
-			ranks = character1.career["ranks"][character1.rank], 
-			terms = character1.terms, 
-			status = character1.status, 
-			cash = character1.cash, 
-			skills = skill_stringer(character1.skills), 
-			possessions = possession_stringer(character1.possessions),
-
-			# Test for world values 
-			size = upp_stringer(character1.birth_size),
-			atmosphere = upp_stringer(character1.birth_atmosphere),
-			hydrographics = upp_stringer(character1.birth_hydrographics),
-			population = upp_stringer(character1.birth_population),
-			government = upp_stringer(character1.birth_government),
-			lawlevel = upp_stringer(character1.birth_lawlevel),
-			techlevel = upp_stringer(character1.birth_techlevel),
-			trade = array_stringer(character1.birth_tradelevel)
-		)
-	)
+		if args.template:
+			if args.template == 'markdown':
+				print_extension = 'md'
+				template_name = print_template + '/' + args.template + '.template'
+			else:
+				print_extension = 'txt'
+				template_name = print_template + '/' + args.template + '.template'
 
 
-if file_name:
-	sys.stdout = sys.__stdout__
+		filein = open( template_name )
+		character_sheet = Template( filein.read() )
 
+		if args.file:
+			file_name = args.file + '.' + print_extension
+
+		if file_name:
+			sys.stdout = open(file_name, "w")
+
+
+		for x in range(number_of_runs):
+			character1=Character()
+			print (
+				character_sheet.substitute(
+					title = character1.title, 
+					name = character1.word_gen(args), 
+					surname = character1.word_gen(args), 
+					race = character1.race,
+					sex = character1.sex,
+					upp = character1.upp_stringer(character1.upp), 
+					age = character1.age, 
+					birth_world_name = character1.word_gen(args),
+					birth_starport = character1.birth_starport,
+					birth_upp = character1.upp_stringer(character1.birth_upp),
+					discharge_world_name = character1.word_gen(args),
+					discharge_starport = character1.discharge_starport,
+					discharge_upp = character1.upp_stringer(character1.discharge_upp),
+					psionic_trained = character1.psionic_trained,
+					psionic_rating = character1.psionic_rating,
+					psionic_talents = character1.array_stringer(character1.psionic_talents),
+					tas_member = character1.tas_member,
+					career_name = character1.career["name"], 
+					ranks = character1.career["ranks"][character1.rank], 
+					terms = character1.terms, 
+					status = character1.status, 
+					cash = character1.cash, 
+					skills = character1.skill_stringer(character1.skills), 
+					possessions = character1.possession_stringer(character1.possessions),
+
+					# Test for world values 
+					size = character1.upp_stringer(character1.birth_size),
+					atmosphere = character1.upp_stringer(character1.birth_atmosphere),
+					hydrographics = character1.upp_stringer(character1.birth_hydrographics),
+					population = character1.upp_stringer(character1.birth_population),
+					government = character1.upp_stringer(character1.birth_government),
+					lawlevel = character1.upp_stringer(character1.birth_lawlevel),
+					techlevel = character1.upp_stringer(character1.birth_techlevel),
+					trade = character1.array_stringer(character1.birth_tradelevel)
+				)
+			)
+		sys.stdout = sys.__stdout__
+		return "complete"
+
+character = Character()
+create_character = character.create_character
+
+if __name__ == '__main__':
+	parser = argparse.ArgumentParser(description='Create Traveller characters. They will be posted to a file or the screen.')
+
+	parser.add_argument('-c', '--char', type=int, help='Number of characters to generate.')
+	parser.add_argument('-f', '--file',           help='Save characters to this file name.')
+	parser.add_argument('-t', '--template',       help='Template name without the .template extension or spaces in name. Default is text.')
+	parser.add_argument('-s', '--seed',           help='seed in the form of a UPP code')
+
+	args = parser.parse_args()
+
+	print(character.create_character(args))
