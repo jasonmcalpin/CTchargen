@@ -25,7 +25,9 @@ from lib.wordplay import create_word
 
 class Character:
 	"""character generation class"""
-	def __init__ (self):
+	def __init__ (self, args={}):
+		start_seed = time.time()
+		random.seed(start_seed)
 		"""generate basic stats"""
 		self.upp = [game.dice(2, 6), game.dice(2, 6), game.dice(2, 6), game.dice(2, 6), game.dice(2, 6), game.dice(2, 6)]
 		self.skills = {}
@@ -48,13 +50,12 @@ class Character:
 		self.status = ""
 		self.sex = game.random_choice(["male", "female"])
 
-		start_seed = time.time()
-		random.seed(start_seed)
+		
 
-		self.birth_world_name =     ""
-		self.discharge_world_name = ""
-		self.name =                 ""
-		self.surname =              ""
+		self.birth_world_name =     self.word_gen(args)
+		self.discharge_world_name = self.word_gen(args)
+		self.name =                 self.word_gen(args)
+		self.surname =              self.word_gen(args)
 		self.career =               self.career_choice(self.upp)
 		self.age = 18
 
@@ -280,56 +281,7 @@ class Character:
 			possessions[item] = 1
 		return possessions #outputs the skill dictionary
 
-	Races=[
-		"Aslan",
-		"Droyne",
-		"Hiver",
-		"Humaniti",
-		"K'kree",
-		"Vargr",
-		"Solomani",
-		"Vilani",
-		"Zhodani",
-		"Imperial",
-		"Darrian",
-		"Geonee",
-		"Suerrat"
-	]
-	guns=[
-		"Body Pistol",
-		"Autopistol",
-		"Revolver",
-		"Carbine",
-		"Rifle",
-		"Autorifle",
-		"Shotgun",
-		"SMG",
-		"Laser Carbine",
-		"Laser Rifle"
-	]
-	melee=[
-		"Blade",
-		"Foil",
-		"Cutlass",
-		"Sword",
-		"Broadsword",
-		"Bayonet",
-		"Spear",
-		"Halberd",
-		"Pike",
-		"Cudgel"
-	]
-	vehicles=[
-		"Aircraft (Helicopter)",
-		"Aircraft (Propeller-driven)",
-		"Aircraft (Jet-driven)" "Grav Vehicle",
-		"Tracked Vehicle",
-		"Wheeled Vehicle",
-		"Watercraft (Small Watercraft)",
-		"Watercraft (Large Watercraft)",
-		"Watercraft (Hovercraft)",
-		"Watercraft (Submerisible)"
-	]
+	
 
 	def skill_stringer(self, input_dict): #input a dictionary
 		"""
@@ -492,6 +444,57 @@ class Character:
 		"""
 		name = create_word(args)
 		return name.capitalize()
+
+	Races=[
+		"Aslan",
+		"Droyne",
+		"Hiver",
+		"Humaniti",
+		"K'kree",
+		"Vargr",
+		"Solomani",
+		"Vilani",
+		"Zhodani",
+		"Imperial",
+		"Darrian",
+		"Geonee",
+		"Suerrat"
+	]
+	guns=[
+		"Body Pistol",
+		"Autopistol",
+		"Revolver",
+		"Carbine",
+		"Rifle",
+		"Autorifle",
+		"Shotgun",
+		"SMG",
+		"Laser Carbine",
+		"Laser Rifle"
+	]
+	melee=[
+		"Blade",
+		"Foil",
+		"Cutlass",
+		"Sword",
+		"Broadsword",
+		"Bayonet",
+		"Spear",
+		"Halberd",
+		"Pike",
+		"Cudgel"
+	]
+	vehicles=[
+		"Aircraft (Helicopter)",
+		"Aircraft (Propeller-driven)",
+		"Aircraft (Jet-driven)" "Grav Vehicle",
+		"Tracked Vehicle",
+		"Wheeled Vehicle",
+		"Watercraft (Small Watercraft)",
+		"Watercraft (Large Watercraft)",
+		"Watercraft (Hovercraft)",
+		"Watercraft (Submerisible)"
+	]
 
 	Navy={
 		"name": "Navy",
@@ -1020,20 +1023,20 @@ class Character:
 
 
 		for x in range(number_of_runs):
-			character1=Character()
+			character1=Character(args)
 			print (
 				character_sheet.substitute(
 					title = character1.title, 
-					name = character1.word_gen(args), 
-					surname = character1.word_gen(args), 
+					name = character1.name, 
+					surname = character1.surname, 
 					race = character1.race,
 					sex = character1.sex,
 					upp = character1.upp_stringer(character1.upp), 
 					age = character1.age, 
-					birth_world_name = character1.word_gen(args),
+					birth_world_name = character1.birth_world_name,
 					birth_starport = character1.birth_starport,
 					birth_upp = character1.upp_stringer(character1.birth_upp),
-					discharge_world_name = character1.word_gen(args),
+					discharge_world_name = character1.discharge_world_name,
 					discharge_starport = character1.discharge_starport,
 					discharge_upp = character1.upp_stringer(character1.discharge_upp),
 					psionic_trained = character1.psionic_trained,

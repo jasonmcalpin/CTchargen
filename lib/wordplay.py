@@ -110,11 +110,14 @@ class Wordplay:
 
 	def create_seed(self, args, seed):
 
-		if seed and seed != 'A-1234567':
-			self.random_seed = seed
-		else:
+		if args:
 			if args.seed:
-				self.random_seed = args.seed
+				self.random_seed = args.seed	
+			else:
+				self.random_seed = time.time()
+		else:
+			if seed and seed != 'A-1234567':
+				self.random_seed = seed
 			else:
 				self.random_seed = time.time()
 
