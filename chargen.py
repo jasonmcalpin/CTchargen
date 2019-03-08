@@ -1,7 +1,7 @@
 """
 chargen.py
 Classic Traveller character generator
-v0.5, July 30th, 2018
+v0.9, March 6th, 2019
 By Omer Golan-Joel, golan2072@gmail.com
 By Jason McAlpin, golmspace@gmail.com
 This code is open-source
@@ -14,7 +14,8 @@ from string import Template
 from lib.worldgen import world
 from lib.hyphenate import hyphenate_word
 from lib.wordplay import create_word
-
+import os
+os.chdir(os.path.dirname(os.path.abspath(__file__)))
 # command line control system
 
 
@@ -438,11 +439,33 @@ class Character:
 			skill_list[skill] = 1
 		return skill_list #outputs the skill dictionary
 
+	def word_gen_new(self, args): #input character sex
+		"""
+		randomly create a word from language rules
+		"""
+		name = create_word(args)
+		return name.capitalize()
+
+
 	def word_gen(self, args): #input character sex
 		"""
 		randomly create a syllable from a random list of syllables
 		"""
-		name = create_word(args)
+		name_source = name=""
+		name_source =  game.random_choice([
+			"names/englishsyllables.txt",
+			# "names/frenchsyllables.txt",
+			# "names/irishsyllables.txt",
+			# "names/italiansyllables.txt",
+			# "names/latinwords.txt",
+			# "names/spanishsyllables.txt",
+		])
+		
+		syllable_length =  [1,1,1,1,1,1,2,2,2,2,2,2,2,2,2,2,2,2,2,2,2,2,2,3,3,3,3,3,3,3,3,3,3,4,4,4]
+		num_syl = game.random_choice(syllable_length)
+		while num_syl > 0:
+			name += game.random_line(name_source)
+			num_syl -= 1
 		return name.capitalize()
 
 	Races=[
