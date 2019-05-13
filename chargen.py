@@ -53,10 +53,10 @@ class Character:
 
 		
 
-		self.birth_world_name =     self.word_gen(args)
-		self.discharge_world_name = self.word_gen(args)
-		self.name =                 self.word_gen(args)
-		self.surname =              self.word_gen(args)
+		self.birth_world_name =     self.phonetic_gen(args)
+		self.discharge_world_name = self.phonetic_gen(args)
+		self.name =                 self.phonetic_gen(args)
+		self.surname =              self.phonetic_gen(args)
 		self.career =               self.career_choice(self.upp)
 		self.age = 18
 
@@ -447,6 +447,31 @@ class Character:
 		return name.capitalize()
 
 
+	def phonetic_gen(self, args): #input character sex
+		"""
+		randomly create a syllable from a random list of syllables
+		"""
+		phonetic_onset = "names/phonetic_english_onset.txt"
+		phonetic_nucleus = "names/phonetic_english_nucleus.txt"
+		phonetic_coda = "names/phonetic_english_coda.txt"
+		phonetic_structure = game.random_line("names/phonetic_english_structure.txt")
+		structure_length = len(phonetic_structure)
+
+		
+
+		name=""
+		
+		for syllable in phonetic_structure:
+			if syllable == "o":
+				name += game.random_line(phonetic_onset)
+			elif syllable == "n":
+				name += game.random_line(phonetic_nucleus)
+			else:
+				name += game.random_line(phonetic_coda)
+			
+
+		return name.capitalize()
+
 	def word_gen(self, args): #input character sex
 		"""
 		randomly create a syllable from a random list of syllables
@@ -454,6 +479,8 @@ class Character:
 		name_source = name=""
 		name_source =  game.random_choice([
 			"names/englishsyllables.txt",
+			# "names/mericansyllables.txt",
+			# "names/evilsyllables.txt",
 			# "names/frenchsyllables.txt",
 			# "names/irishsyllables.txt",
 			# "names/italiansyllables.txt",
