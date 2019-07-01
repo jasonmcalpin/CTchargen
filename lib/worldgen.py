@@ -1,4 +1,4 @@
-import stellagama as game
+import lib.stellagama as game
 
 class world:
 	"""character generation class"""
@@ -88,20 +88,20 @@ class world:
 			elif starport =='A':
 				tech_base += 6
 
-			if size == 0 or size == 1:
+			if size in [1,2]:
 				tech_base += 2
-			elif size >= 2 and size <= 4:
+			elif size in [2,3,4]:
 				tech_base += 1
 
-			if atmosphere <= 3 or atmosphere >= 10:
+			if atmosphere in [0,1,2,3,10,11,12,13,14,15]:
 				tech_base += 1
 
-			if hydrographics == 0 or hydrographics == 9:
+			if hydrographics in [0,9]:
 				tech_base += 1
 			elif hydrographics == 10:
 				tech_base += 2
 
-			if population <= 5 or  population == 9:
+			if population in [0,1,2,3,4,5,9]:
 				tech_base += 1
 			elif population == 10:
 				tech_base += 2
@@ -110,11 +110,11 @@ class world:
 			elif population == 12:
 				tech_base += 4
 
-			if government == 0 or government == 5:
+			if government in [0,5]:
 				tech_base += 1
 			elif government == 7:
 				tech_base += 2
-			elif government == 13 or government == 14:
+			elif government in [13,14]:
 				tech_base += -2
 
 			if tech_base <= 0:
@@ -127,72 +127,40 @@ class world:
 	def trade_classification ( self, size, atmosphere,hydrographics, population, government, lawlevel, techlevel ):
 		trade_list =[]
 
-		if atmosphere == 0:
-			trade_list.extend(['Va'])
-
-		# Classifification		Code	Size	Atmos	Hydro	Pop.	Gov.	Law		TL
-		# 	Agricultural		Ag	 			4-9		4-8		5-7
-		if atmosphere >= 4 and atmosphere <= 9:
-			if hydrographics >= 4 and hydrographics <= 8:
-				if population >= 5 and population <= 7:
-					trade_list.extend(['Ag'])
-		# 	Asteroid			As		0		0		0
+		if atmosphere in [4,5,6,7,8,9] and hydrographics in [4,5,6,7,8] and population in [4,5,6,7]:
+			trade_list.extend(['Ag'])
 		if size == 0 and atmosphere == 0 and hydrographics == 0:
 			trade_list.extend(['As'])
-		# 	Barren				Ba	 	 	 					0		0		0
 		if population == 0 and government == 0 and lawlevel == 0:
 			trade_list.extend(['Ba'])
-		# 	Desert				De	 			2+		0
 		if atmosphere >= 2 and hydrographics == 0:
 			trade_list.extend(['De'])
-		# 	Fluid Oceans		Fl	 			10+		1+
 		if atmosphere >= 10 and hydrographics >= 1:
 			trade_list.extend(['Fl'])
-		# 	Garden				Ga	 			5+		4-9		4-8
-		if atmosphere >= 5:
-			if hydrographics >= 4 and hydrographics <= 9:
-				if population >= 4 and population <= 8:
-					trade_list.extend(['Ga'])
-		# 	High Population		Hi	 	 	 					9+
+		if atmosphere >= 5 and hydrographics in [4,5,6,7,8,9] and population in [4,5,6,7,8]:
+			trade_list.extend(['Ga'])
 		if population >= 9:
 			trade_list.extend(['Hi'])
-		# 	High Technology		Ht	 	 	 	 	 	 								12+
 		if techlevel >= 12:
 			trade_list.extend(['Ht'])
-		# 	Ice-Capped			Ic	 			0-1		1+
-		if atmosphere >= 0 and atmosphere <= 1:
-			if hydrographics >= 1:
-				trade_list.extend(['Ic'])
-		# 	Industrial			In	 		  0-2,4,7,9			9+
-		if ( atmosphere >= 0 and atmosphere <= 2 ) or atmosphere == 4 or atmosphere == 7 or atmosphere == 9:
-			if population >= 9:
-				trade_list.extend(['In'])
-		# 	Low Population		Lo	 	 	 					1-3
-		if population <= 3 and population >= 1:
+		if atmosphere in [0,1] and hydrographics >= 1:
+			trade_list.extend(['Ic'])
+		if atmosphere in [0,1,2,4,7,9] and population >= 9:
+			trade_list.extend(['In'])
+		if population in [1,2,3]:
 			trade_list.extend(['Lo'])
-		# 	Low Technology		Lt	 	 	 	 	 	 								5-
 		if techlevel <= 5:
 			trade_list.extend(['Lt'])
-		# 	Non-Agricultural	Na	 			0-3		0-3		6+
-		if atmosphere >= 0 and atmosphere <= 3:
-			if hydrographics >= 0 and hydrographics <= 3:
-				if population >= 6:
-					trade_list.extend(['Na'])
-		# 	Non-Industrial		Ni	 	 	 					4-6
-		if population >= 4 and population <= 6:
+		if atmosphere in [0,1,2,3] and hydrographics in [0,1,2,3] and population >= 6:
+			trade_list.extend(['Na'])
+		if population in [4,5,6]:
 			trade_list.extend(['Ni'])
-		# 	Poor				Po	 			2-5		0-3
-		if atmosphere >= 2 and atmosphere <= 5:
-			if hydrographics >= 0 and hydrographics <= 3:
-				trade_list.extend(['Po'])
-		# 	Rich				Ri	 			6, 8	 		6-8
-		if atmosphere == 6 or atmosphere == 8:
-			if population >= 6 and population <= 8:
-				trade_list.extend(['Ri'])
-		# 	Water World			Wa	 	 				10
+		if atmosphere in [2,3,3,4,5] and hydrographics in [0,1,2,3]:
+			trade_list.extend(['Po'])
+		if atmosphere in[6,8] and population in [6,7,8]:
+			trade_list.extend(['Ri'])
 		if hydrographics == 10:
 			trade_list.extend(['Wa'])
-		# 	Vacuum				Va	 			0
 		if atmosphere == 0:
 			trade_list.extend(['Va'])
 
