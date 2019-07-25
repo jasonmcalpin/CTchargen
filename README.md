@@ -43,7 +43,8 @@ Several quick start options are available:
 
 
 ## Status
-
+[![star this repo](http://githubbadges.com/star.svg?user=jasonmcalpin&repo=CTchargen&style=default)](https://github.com/jasonmcalpin/node_starter)
+[![fork this repo](http://githubbadges.com/fork.svg?user=jasonmcalpin&repo=CTchargen&style=default)](https://github.com/jasonmcalpin/node_starter/fork)
 
 
 ## What's included
