@@ -51,14 +51,12 @@ class Character:
 		self.status = ""
 		self.sex = game.random_choice(["male", "female"])
 
-		
-
 		self.birth_world_name =     self.phonetic_gen(args)
 		self.discharge_world_name = self.phonetic_gen(args)
 		self.name =                 self.phonetic_gen(args)
 		self.surname =              self.phonetic_gen(args)
 		self.career =               self.career_choice(self.upp)
-		self.age = 18
+		self.age =                  18
 
 		# Test for world values use with -t world
 		self.birth_size =          self.birth_world.size,
@@ -69,6 +67,7 @@ class Character:
 		self.birth_lawlevel =      self.birth_world.lawlevel,
 		self.birth_techlevel =     self.birth_world.techlevel,
 		self.birth_tradelevel =    self.birth_world.tradelevel
+
 		"""enlistment"""
 		enlistment=game.dice(2,6)
 		if self.upp[self.career["enlistment DM+1"]]>=self.career["enlistment DM+1 level"]:
@@ -79,6 +78,7 @@ class Character:
 			self.career=self.career
 		else:
 			self.career=game.random_choice([self.Navy, self.Marines, self.Army, self.Merchants, self.Scouts, self.Other])
+
 		"""career generation loop"""
 		in_career=True
 		while in_career == True:
@@ -96,6 +96,7 @@ class Character:
 				self.status="DECEASED"
 				in_career=False
 				break
+
 			"""skill generation"""
 			if self.career in [self.Scouts, self.Other]:
 				for i in range (0,2):
@@ -109,6 +110,7 @@ class Character:
 				else:
 					skill_table=game.random_choice(["personal", "service", "advanced", "advanced 2"])
 					self.add_skill(self.skills, game.random_choice(self.career[skill_table]))
+
 			"""commission and promotion"""
 			if self.career in [self.Scouts, self.Other]:
 				self.rank=0
@@ -136,6 +138,7 @@ class Character:
 						self.add_skill(self.skills, self.career["rank skills"][self.rank])
 				else:
 					self.rank=self.rank
+
 			"""reenlistment"""
 			reenlistment=game.dice(2,6)
 			if self.terms<7 and reenlistment>= self.career["reenlist"]:
@@ -144,6 +147,7 @@ class Character:
 				in_career=True
 			else:
 				in_career=False
+
 		"""mustering out"""
 		if self.status=="DECEASED":
 			self.possessions={}
@@ -174,6 +178,7 @@ class Character:
 						self.cash -= 100000
 						self.psionic_trained = "yes"
 						self.psionic_talents = self.add_psionic_talent(self.psionic_rating, self.terms)
+
 		"""characteristic modifications"""
 		for k in list(self.skills.keys()):
 			if k == "+1 STR":
@@ -227,6 +232,7 @@ class Character:
 			elif k == "+2 SOC":
 				self.upp[5]+=2
 				del self.possessions[k]
+
 		"""titles"""
 		if self.upp[5]==11:
 			if self.sex=="male":

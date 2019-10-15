@@ -56,11 +56,22 @@ CTchargen/
 │    ├── markdown.template       - A markdown template file
 │    └── text.template           - A generic template file
 │
-├── femalenames.txt              - female names
-├── malenames.txt                - male names
-├── surnames.txt                 - list of last names
+├── names/ 
+│    ├── englishsyllables.txt    - English syllables
+│    ├── irishsyllables.txt      - Irish syllables
+│    ├── italiansyllables.txt    - Italian syllables
+│    └── frenchsyllables.txt     - French syllables
+│
+├── data/ 
+│    └── syllable_starter.json   - syllable structure list 
+│
+├── lib/ 
+│    ├── hyphenate.py            - Hyphenated 
+│    ├── stellagama.py           - General game functions
+│    ├── wordplay.pyc            - Syllable stucture gen
+│    └── worldgen.pyc            - World generator
+│
 ├── README.md                    - This file
-├── stellagama.py                - General game functions
 └── chargen.py                   - main generator file.
 ```
 
