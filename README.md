@@ -1,8 +1,5 @@
 
 <p align="center">
-  <a href="https://git.ogilvy-digital.com/projects/OGINT/repos/docker-project-init/browse">
-    <img src=" " alt="" width=72 height=72>
-  </a>
 
   <h3 align="center">CTchargen</h3>
 
