@@ -1,0 +1,13 @@
+{
+  "output_dir": "output",
+  "default_template": "text",
+  "default_output_format": "txt",
+  "default_num_characters": 1,
+  "name_generation": {
+    "use_phonetic": true
+  },
+  "web_interface": {
+    "backend_port": 8000,
+    "frontend_port": 3000
+  }
+}

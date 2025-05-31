@@ -1,161 +1,284 @@
+# CTchargen - Classic Traveller Character Generator
 
-<p align="center">
+A character generator for the Classic Traveller RPG system.
 
-  <h3 align="center">CTchargen</h3>
+## Overview
 
-  <p align="center">
-    Generate a list of Classic Traveller characters.
-    <br>
-    <br>
-    <a href="https://github.com/jasonmcalpin/CTchargen.git">Clone</a>
-    ·
-    <a href="https://github.com/jasonmcalpin/CTchargen/compare/templated?expand=1">Pull Requests</a>
-  </p>
-</p>
+CTchargen is a Python-based character generator for the Classic Traveller role-playing game. It creates random characters with characteristics, skills, and equipment, and can output them in various formats using customizable templates.
 
-<br>
+## Features
 
-## Table of contents
+- Generate random Classic Traveller characters
+- Customizable character traits and equipment
+- Multiple output formats using templates
+- Command-line interface for easy use
+- Web interface for browser-based access
+- RESTful API for integration with other tools
+- Configurable settings
 
-- [Quick start](#quick-start)
-- [Status](#status)
-- [What's included](#whats-included)
-- [Bugs and feature requests](#bugs-and-feature-requests)
-- [Documentation](#documentation)
-- [Contributing](#contributing)
-- [Community](#community)
-- [Versioning](#versioning)
-- [Creators](#creators)
-- [Copyright and license](#copyright-and-license)
+## Installation
 
-## Quick start
+### Prerequisites
 
-Several quick start options are available:
+- Python 3.6 or higher
+- Node.js 14 or higher (for web interface)
 
-- `python chargen.py` to generate a character
-- `python chargen.py -c ##` to generate ## number of characters
-- `python chargen.py -s filename` to generate the character to a file
-- `python chargen.py -s filename -c ##` to generate ## number of characters to a file
-- `python chargen.py -s filename -c ## -t mycharactersheet` to generate ## number of characters to a file using the template file `mycharactersheet.template` that you put into the template folder.
+### Automated Installation
 
+Use the provided installation script to set up the project:
 
-## Status
-[![star this repo](http://githubbadges.com/star.svg?user=jasonmcalpin&repo=CTchargen&style=default)](https://github.com/jasonmcalpin/node_starter)
-[![fork this repo](http://githubbadges.com/fork.svg?user=jasonmcalpin&repo=CTchargen&style=default)](https://github.com/jasonmcalpin/node_starter/fork)
+```
+python install.py
+```
 
+This will:
+1. Create a virtual environment
+2. Install Python dependencies
+3. Set up the frontend
+4. Create necessary directories
 
-## What's included
+### Manual Installation
 
-Within this repo you'll find the following folders and files:
+1. Clone the repository:
+   ```
+   git clone https://github.com/yourusername/CTchargen.git
+   cd CTchargen
+   ```
+
+2. Create a virtual environment:
+   ```
+   python -m venv venv
+   ```
+
+3. Activate the virtual environment:
+   - Windows: `venv\Scripts\activate`
+   - Unix/MacOS: `source venv/bin/activate`
+
+4. Install backend dependencies:
+   ```
+   pip install -r web/backend/requirements.txt
+   ```
+
+5. Install frontend dependencies:
+   ```
+   cd web/frontend
+   npm install
+   ```
+
+## Usage
+
+### Web Interface
+
+The web interface provides a user-friendly way to generate and view characters.
+
+#### All-in-One Startup
+
+Use the all-in-one startup script to start both the backend and frontend servers and open the web interface in your browser:
+
+- Windows: `start_app.bat`
+- Unix/MacOS: `./start_app.sh`
+
+#### Troubleshooting Frontend Build Issues
+
+If you encounter issues when building the frontend, use the provided fix script:
+
+- Windows: `fix_frontend_build.bat`
+- Unix/MacOS: `./fix_frontend_build.sh`
+
+This script will:
+1. Install any missing dependencies
+2. Update TypeScript configuration to be less strict
+3. Install necessary type definitions
+4. Attempt to build the frontend
+
+#### Manual Startup
+
+If you prefer to start the servers manually:
+
+1. Start the backend server:
+   - Windows: `run_backend.bat`
+   - Unix/MacOS: `./run_backend.sh`
+
+2. Start the frontend development server:
+   - Windows: `run_frontend.bat`
+   - Unix/MacOS: `./run_frontend.sh`
+
+3. Open your browser and navigate to `http://localhost:3000`
+
+### Command Line Interface
+
+```
+python chargen.py [options]
+```
+
+Options:
+- `-n, --num-characters`: Number of characters to generate (default: 1)
+- `-o, --output`: Output filename without extension (default: "characters")
+- `-t, --template`: Template to use (default: "text")
+- `-f, --format`: Output file format (default: "txt")
+- `-c, --config`: Path to configuration file
+- `-v, --verbose`: Enable verbose output
+
+Example:
+```
+python chargen.py -n 5 -o my_characters -t text -f txt -v
+```
+
+### As a Python Module
+
+```python
+from src.character import generate_characters
+from src.renderer import save_characters
+
+# Generate 3 characters
+characters = generate_characters(3)
+
+# Convert to dictionaries
+characters_data = [character.to_dict() for character in characters]
+
+# Save to file using the text template
+output_path = save_characters(characters_data, "my_characters", "text", "txt")
+print(f"Characters saved to: {output_path}")
+```
+
+### RESTful API
+
+The project includes a RESTful API that can be used to generate characters programmatically.
+
+API Endpoints:
+- `GET /api/characters/templates` - List available templates
+- `GET /api/characters/config` - Get current configuration
+- `POST /api/characters/generate` - Generate characters
+
+Example API request:
+```
+curl -X POST http://localhost:8000/api/characters/generate \
+  -H "Content-Type: application/json" \
+  -d '{"num_characters": 3, "template": "text", "output_format": "txt"}'
+```
+
+## Configuration
+
+The generator can be configured using a JSON configuration file. Create a file named `config.json` in the project directory with your custom settings.
+
+Example configuration:
+```json
+{
+  "output_dir": "output",
+  "default_template": "text",
+  "default_output_format": "txt",
+  "default_num_characters": 1,
+  "name_generation": {
+    "use_phonetic": true
+  }
+}
+```
+
+## Templates
+
+The generator uses template files to format the output. Template files are located in the `templates/` directory and use a simple string substitution format.
+
+Available templates:
+- `text.template`: Plain text format
+- `markdown.template`: Markdown format
+- `death.template`: Death & Dismemberment format
+- `world.template`: World generation format
+
+### Custom Templates
+
+You can create your own templates by adding a file to the `templates/` directory. Template files use Python's string.Template format with placeholders for character attributes.
+
+Example template:
+```
+Name: ${name}
+UPP: ${upp_string}
+Gender: ${gender}
+Race: ${race}
+Age: ${age}
+Skills: ${skills_string}
+```
+
+## Project Structure
 
 ```
 CTchargen/
-├── templates/                   - The location of all of the template files for the generator.
-│    ├── markdown.template       - A markdown template file
-│    └── text.template           - A generic template file
-│
-├── femalenames.txt              - female names
-├── malenames.txt                - male names
-├── surnames.txt                 - list of last names
-├── README.md                    - This file
-├── stellagama.py                - General game functions
-└── chargen.py                   - main generator file.
+├── chargen.py              # Main entry point (legacy)
+├── install.py              # Installation script
+├── run_backend.bat         # Windows script to run backend
+├── run_backend.sh          # Unix script to run backend
+├── run_frontend.bat        # Windows script to run frontend
+├── run_frontend.sh         # Unix script to run frontend
+├── start_app.bat           # Windows script to start the entire application
+├── start_app.sh            # Unix script to start the entire application
+├── test_installation.bat   # Windows script to test the installation
+├── test_installation.sh    # Unix script to test the installation
+├── fix_frontend_build.bat  # Windows script to fix frontend build issues
+├── fix_frontend_build.sh   # Unix script to fix frontend build issues
+├── README.md               # Documentation
+├── LICENSE                 # MIT License
+├── .gitignore              # Git ignore file
+├── src/                    # Source code
+│   ├── __init__.py         # Package initialization
+│   ├── chargen.py          # Main module
+│   ├── character.py        # Character generation
+│   ├── config.py           # Configuration
+│   ├── renderer.py         # Template rendering
+│   └── lib/                # Library modules
+│       ├── __init__.py     # Package initialization
+│       ├── hyphenate.py    # Word hyphenation
+│       ├── stellagama.py   # Utility functions
+│       ├── wordplay.py     # Name generation
+│       └── worldgen.py     # World generation
+├── data/                   # Data files
+│   └── syllable_starter.json  # Syllable data
+├── names/                  # Name files
+│   ├── englishsyllables.txt
+│   ├── femalenames.txt
+│   ├── malenames.txt
+│   └── ...
+├── templates/              # Template files
+│   ├── text.template       # Plain text output
+│   ├── markdown.template   # Markdown output
+│   └── ...
+├── output/                 # Generated output files (not tracked in git)
+├── scripts/                # Helper scripts
+│   ├── run_backend.py      # Script to run backend server
+│   └── run_frontend.py     # Script to run frontend server
+├── web/                    # Web interface
+│   ├── backend/            # Backend API
+│   │   ├── api/            # API endpoints
+│   │   ├── models/         # Data models
+│   │   ├── utils/          # Utility functions
+│   │   ├── main.py         # FastAPI application
+│   │   └── requirements.txt # Backend dependencies
+│   └── frontend/           # Frontend application
+│       ├── public/         # Static files
+│       ├── src/            # Source code
+│       │   ├── components/ # React components
+│       │   ├── hooks/      # React hooks
+│       │   ├── styles/     # SCSS styles
+│       │   ├── types/      # TypeScript types
+│       │   ├── utils/      # Utility functions
+│       │   ├── App.tsx     # Main application component
+│       │   └── main.tsx    # Entry point
+│       ├── index.html      # HTML template
+│       ├── package.json    # Frontend dependencies
+│       ├── tsconfig.json   # TypeScript configuration
+│       └── vite.config.ts  # Vite configuration
+└── venv/                   # Virtual environment (not tracked in git)
 ```
 
+## License
 
-## Bugs and feature requests
+This project is licensed under the MIT License - see the LICENSE file for details.
 
+## Credits
 
-
-
-## Documentation
-
-This project is an expansion of a project started by Omer Golan-Joel. This version includes commandline arguments and  expanded output options. The format of the output has been moved to template files that are in the template folder. This will allow you to add any format you need for your own games to that folder without having to wait. The syntex of the templates is very simple.
-
-To get help for what options are available you from the command line you can use `--help`.
-
-The following commands are available.
-```
-usage: chargen.py [-h] [-c CHAR] [-s SAVE] [-t TEMPLATE]
-
-Create Traveller characters. They will be posted to a file or the screen.
-
-optional arguments:
-  -h, --help            show this help message and exit
-  -c CHAR, --char CHAR  Number of characters to generate.
-  -s SAVE, --save SAVE  Save characters to this file name.
-  -t TEMPLATE, --template TEMPLATE
-                        Template name without the .template extension or
-                        spaces in name. Default is text.
-```
-
-## Contributing
-
-You can fork the project and commit a pull request with the new feature.
-
-
-## Community
-
-Get updates on DPI development and chat with the project maintainers and community members.
-
-- Slack [#docker-project-init](https://oiny.slack.com/messages/CAV1X5N5U/details/).
-
-
-## Versioning
-
-0.5, July 30th, 2018
-Template system added
-psionic talents added
-birth world added (placeholder)
-discharge world added (placeholder)
-alien race names added ( No modification to name, stats, or skills yet. this is a placeholder)
-
-
-0.4, April 12th, 2018
-All careers added
-Rank skills added
-
-0.3, April 9th, 2018
-Cascade skills added
-"Cascade" equipment added (gun and melee types)
-Noble title are now by sex
-
-0.2, April 9th, 2018
-Army career finalized
-Mustering out benefits added
-
-0.15, April 6th, 2018
-Improved the chargen loop and skill acquision
-Implemented the Marines career
-Implemented a more traditional character output format
-Characters now have names and surnames randomly chosen from an external file
-Implemented noble titles
-
-0.1, April 6th, 2018
-Returned to dictionaries for the career data structure, works perfectly.
-Baseline career loop created. It still lacks mustering out and only uses the Service skill table, but starts generating something remotely resembling a Traveller character,
-Careers are mock-up; all use Navy stats except for their names. To be changed later.
-
-0.03, April 6th, 2018
-Implemented the Named Tuple career data structure.
-
-0.02, April 5th, 2018
-Still extremely partial, but improved the data structure. The character will now be an object; I'll later add the careers as Named Tuples.
-
-0.01, March 30th, 2018
-Very early and very partial code. Includes several relevant functions, the career and character data structures, and the very beginning of the character object and the main character generation function.
-
-
-## Creators
-**By Omer Golan-Joel**
-golan2072@gmail.com
-
-
-**Jason McAlpin**
-- <https://twitter.com/jasonmcalpin>
-- <https://github.com/jasonmcalpin>
-
-## Copyright and license
-This code is open-source
-
-
+- Original concept by Omer Golan-Joel
+- Significant development and enhancements by Jason McAlpin, including:
+  - World generation system
+  - Word generation system
+  - Template system
+  - Command-line interface
+- Web interface and API by [Your Name]
+- Currently maintained by Jason McAlpin

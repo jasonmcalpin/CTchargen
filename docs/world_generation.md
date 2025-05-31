@@ -1,0 +1,253 @@
+# World Generation Documentation
+
+This document explains how the CTchargen world generation system works and how to use it.
+
+## Overview
+
+The world generation system in CTchargen creates random worlds for the Classic Traveller role-playing game. Each world has characteristics such as size, atmosphere, hydrographics, population, government, law level, and tech level, which are combined to form a Universal World Profile (UWP).
+
+## Universal World Profile (UWP)
+
+The Universal World Profile (UWP) is a string of characters that represents the characteristics of a world. Each character represents a different characteristic, and the characters are arranged in a specific order:
+
+```
+SATHPGL
+```
+
+Where:
+- S: Size (0-10)
+- A: Atmosphere (0-15)
+- T: Temperature (0-15, not used in CTchargen)
+- H: Hydrographics (0-10)
+- P: Population (0-15)
+- G: Government (0-15)
+- L: Law Level (0-15)
+
+Additionally, worlds have a starport class (A, B, C, D, E, or X) and a tech level (0-15).
+
+## World Generation Process
+
+The world generation process follows these steps:
+
+1. Generate a starport class
+2. Generate a size
+3. Calculate atmosphere based on size
+4. Calculate hydrographics based on size and atmosphere
+5. Generate population
+6. Calculate government based on population
+7. Calculate law level based on government and population
+8. Calculate tech level based on various factors
+9. Determine trade classifications based on world characteristics
+
+## Using the World Generator
+
+### Python API
+
+You can use the world generator programmatically:
+
+```python
+from src.lib.worldgen import generate_world
+
+# Generate a random world
+world = generate_world()
+print(world)
+
+# Generate multiple worlds
+from src.lib.worldgen import generate_worlds
+worlds = generate_worlds(5)
+for world in worlds:
+    print(world)
+```
+
+## World Characteristics
+
+### Starport
+
+The starport class represents the quality of the starport facilities on the world:
+
+- A: Excellent quality starport
+- B: Good quality starport
+- C: Routine quality starport
+- D: Poor quality starport
+- E: Frontier starport
+- X: No starport
+
+### Size
+
+The size of the world, from 0 (asteroid) to 10 (large world):
+
+- 0: 800 km (asteroid)
+- 1: 1,600 km
+- 2: 3,200 km
+- 3: 4,800 km
+- 4: 6,400 km
+- 5: 8,000 km
+- 6: 9,600 km
+- 7: 11,200 km
+- 8: 12,800 km
+- 9: 14,400 km
+- 10: 16,000 km (large world)
+
+### Atmosphere
+
+The atmosphere of the world, from 0 (none) to 15 (exotic):
+
+- 0: None
+- 1: Trace
+- 2: Very thin, tainted
+- 3: Very thin
+- 4: Thin, tainted
+- 5: Thin
+- 6: Standard
+- 7: Standard, tainted
+- 8: Dense
+- 9: Dense, tainted
+- 10: Exotic
+- 11: Corrosive
+- 12: Insidious
+- 13-15: Special
+
+### Hydrographics
+
+The percentage of the world's surface covered by water, from 0 (0%) to 10 (100%):
+
+- 0: 0% water
+- 1: 10% water
+- 2: 20% water
+- 3: 30% water
+- 4: 40% water
+- 5: 50% water
+- 6: 60% water
+- 7: 70% water
+- 8: 80% water
+- 9: 90% water
+- 10: 100% water (water world)
+
+### Population
+
+The population of the world, from 0 (uninhabited) to 15 (extremely populous):
+
+- 0: Uninhabited
+- 1: Tens
+- 2: Hundreds
+- 3: Thousands
+- 4: Tens of thousands
+- 5: Hundreds of thousands
+- 6: Millions
+- 7: Tens of millions
+- 8: Hundreds of millions
+- 9: Billions
+- 10: Tens of billions
+- 11-15: Special
+
+### Government
+
+The type of government on the world, from 0 (none) to 15 (special):
+
+- 0: None
+- 1: Company/Corporation
+- 2: Participating Democracy
+- 3: Self-Perpetuating Oligarchy
+- 4: Representative Democracy
+- 5: Feudal Technocracy
+- 6: Captive Government
+- 7: Balkanization
+- 8: Civil Service Bureaucracy
+- 9: Impersonal Bureaucracy
+- 10: Charismatic Dictator
+- 11: Non-Charismatic Leader
+- 12: Charismatic Oligarchy
+- 13: Religious Dictatorship
+- 14: Religious Autocracy
+- 15: Totalitarian Oligarchy
+
+### Law Level
+
+The restrictiveness of the world's laws, from 0 (no restrictions) to 15 (extreme restrictions):
+
+- 0: No restrictions
+- 1-9: Progressively more restrictive
+- 10-15: Extreme restrictions
+
+### Tech Level
+
+The technological development of the world, from 0 (primitive) to 15 (extremely advanced):
+
+- 0: Primitive (stone age)
+- 1: Bronze age
+- 2: Iron age
+- 3: Medieval
+- 4: Renaissance
+- 5: Industrial revolution
+- 6: Nuclear age
+- 7: Early stellar
+- 8: Pre-stellar
+- 9: Early stellar
+- 10: Early stellar
+- 11: Average stellar
+- 12: Average stellar
+- 13: Above average stellar
+- 14: Above average stellar
+- 15: High stellar
+
+## Trade Classifications
+
+Worlds can have one or more trade classifications based on their characteristics:
+
+- Ag: Agricultural
+- As: Asteroid
+- Ba: Barren
+- De: Desert
+- Fl: Fluid Oceans
+- Ga: Garden
+- Hi: High Population
+- Ht: High Technology
+- Ic: Ice-Capped
+- In: Industrial
+- Lo: Low Population
+- Lt: Low Technology
+- Na: Non-Agricultural
+- Ni: Non-Industrial
+- Po: Poor
+- Ri: Rich
+- Va: Vacuum
+- Wa: Water World
+
+## Examples
+
+Here are some examples of worlds generated by the system:
+
+```
+UPP: 7106956
+Starport: C
+Size: 7
+Atmosphere: 1
+Hydrographics: 0
+Population: 6
+Government: 9
+Law Level: 5
+Tech Level: 6
+Trade Classifications: Na Va
+```
+
+```
+UPP: 91281074
+Starport: B
+Size: 9
+Atmosphere: 1
+Hydrographics: 2
+Population: 8
+Government: 10
+Law Level: 7
+Tech Level: 4
+Trade Classifications: Na Hi
+```
+
+## Troubleshooting
+
+If you encounter issues with world generation:
+
+1. Check that the world generation parameters are valid
+2. Verify that the trade classification rules are correctly implemented
+3. Ensure that the random number generator is working correctly
+4. Check the console output for error messages
