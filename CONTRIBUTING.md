@@ -55,6 +55,25 @@ Please be respectful and considerate of others when contributing to this project
 - Add docstrings to all new functions, methods, and classes
 - Update the CHANGELOG.md file with your changes
 
+## Career System
+
+The project includes a career generation system in `src/careers.py`. If you want to contribute to this system:
+
+1. Add new careers to the `CAREERS` dictionary
+2. Each career should include:
+   - `ranks`: List of rank titles in order of progression
+   - `skills`: List of skills available to this career
+   - `weapons`: List of weapons available to this career
+   - `equipment`: List of equipment available to this career
+   - `cash_table`: List of cash amounts based on terms served
+
+3. Ensure the career generation functions work with your new careers:
+   - `generate_career()`: Selects a random career
+   - `generate_rank()`: Determines rank based on career and terms
+   - `generate_skills()`: Assigns skills based on career and terms
+   - `generate_equipment()`: Assigns weapons, armor, and equipment
+   - `generate_cash()`: Determines cash based on career and terms
+
 ## Pull Request Process
 
 1. Update the README.md with details of changes if applicable

@@ -1,18 +1,30 @@
-##TAS PROFILE
-**${title} ${name} ${surname}**, ${sex} ${race}, UPP ${upp}, ${age} years old
+## Character Profile
 
-Birth world: ${birth_world_name} UPP: ${birth_starport}-${birth_upp}
+**Name:** ${name}  
+**UPP:** ${upp_string}  
+**Gender:** ${gender}  
+**Race:** ${race}  
+**Age:** ${age} years old  
 
-**${career_name}** ${ranks} **${terms} Terms** ${status} Cr ${cash}
+## Career
 
-Discharge World: ${discharge_world_name} UPP: ${discharge_starport}-${discharge_upp}
+**Career:** ${career}  
+**Rank:** ${rank}  
+**Terms:** ${terms} Terms  
+**Status:** ${died ? "Deceased (died during service)" : "Active"}  
 
-##SKILLS
-${skills}
+## Skills
 
-##MUSTERING OUT BENEFITS
-${possessions}
+${skills_string}
 
-##PSIONICS
-PSR ${psionic_rating} Psi Trained: ${psionic_trained} Talents: ${psionic_talents}
+## Equipment
 
+**Weapons:** ${weapons}  
+**Armor:** ${armor}  
+**Equipment:** ${equipment}  
+
+**Cash:** ${cash} Credits
+
+## Psionics
+
+${psionic.has_psionic ? (psionic.is_trained ? `**PSR:** ${psionic.psr} (Trained)  \n**Talents:** ${psionic.talents.length ? psionic.talents.join(", ") : "None"}` : `**PSR:** ${psionic.psr} (Untrained)`) : "None"}

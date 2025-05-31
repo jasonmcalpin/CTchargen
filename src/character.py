@@ -11,6 +11,18 @@ import os
 from src.lib import stellagama as sg
 from src.lib import wordplay
 from src.config import config
+from src.careers import (
+    generate_career, 
+    generate_rank, 
+    generate_skills, 
+    generate_equipment, 
+    generate_cash,
+    generate_career_history,
+    CAREERS,
+    MAX_TERMS,
+    AGING_START_TERM
+)
+from src.psionics import generate_psionic_abilities
 
 
 class Character:
@@ -32,6 +44,7 @@ class Character:
         self.career = ""
         self.rank = 0
         self.terms = 0
+        self.died = False
         
         # Equipment
         self.weapons = []
@@ -39,8 +52,22 @@ class Character:
         self.equipment = []
         self.cash = 0
         
+        # Psionics
+        self.psionic = {
+            "has_psionic": False,
+            "psr": 0,
+            "is_trained": False,
+            "talents": []
+        }
+        
         # Generate a random name
         self._generate_name()
+        
+        # Generate career and related attributes
+        self._generate_career_and_skills()
+        
+        # Generate psionic abilities
+        self._generate_psionic_abilities()
     
     def _generate_characteristics(self) -> Dict[str, int]:
         """
@@ -124,6 +151,51 @@ class Character:
         else:
             self.skills[skill] = level
     
+    def _generate_career_and_skills(self) -> None:
+        """Generate a career, skills, and equipment for the character using Classic Traveller rules."""
+        # Generate career history
+        self.career, self.rank, self.terms, self.died = generate_career_history(self.upp)
+        
+        # Update age based on terms
+        self.age = 18 + (self.terms * 4)
+        
+        # If the character died, reduce terms by 1 (they died during their last term)
+        if self.died:
+            self.terms = max(1, self.terms - 1)
+        
+        # Generate skills
+        self.skills = generate_skills(self.career, self.terms)
+        
+        # Generate equipment
+        self.weapons, self.armor, self.equipment = generate_equipment(self.career)
+        
+        # Generate cash
+        self.cash = generate_cash(self.career, self.terms)
+        
+        # Apply aging effects if applicable
+        if self.terms >= AGING_START_TERM:
+            self._apply_aging_effects()
+    
+    def _apply_aging_effects(self) -> None:
+        """Apply aging effects to the character's characteristics."""
+        # Apply aging effects for each term after the 3rd
+        for term in range(AGING_START_TERM, self.terms + 1):
+            # Roll for each physical characteristic (STR, DEX, END)
+            for stat in ["STR", "DEX", "END"]:
+                # Chance of reduction increases with age
+                target = 8 + (term - AGING_START_TERM)
+                
+                # Roll 2D6
+                roll = sg.dice(2, 6)
+                
+                # If roll is >= target, reduce characteristic by 1
+                if roll >= target:
+                    self.upp[stat] = max(1, self.upp[stat] - 1)
+    
+    def _generate_psionic_abilities(self) -> None:
+        """Generate psionic abilities for the character."""
+        self.psionic = generate_psionic_abilities(self.age)
+    
     def set_career(self, career: str, rank: int = 0, terms: int = 1) -> None:
         """
         Set the character's career.
@@ -176,12 +248,18 @@ class Character:
     
     def get_upp_string(self) -> str:
         """
-        Get the character's UPP as a string.
+        Get the character's UPP as a string in hexadecimal notation.
         
         Returns:
-            str: UPP string (e.g., "777777")
+            str: UPP string (e.g., "777777" or "7A7B8C")
         """
-        return "".join(str(self.upp[stat]) for stat in ["STR", "DEX", "END", "INT", "EDU", "SOC"])
+        def to_hex(value):
+            if value < 10:
+                return str(value)
+            else:
+                return chr(ord('A') + (value - 10))
+                
+        return "".join(to_hex(self.upp[stat]) for stat in ["STR", "DEX", "END", "INT", "EDU", "SOC"])
     
     def get_skills_string(self) -> str:
         """
@@ -216,13 +294,51 @@ class Character:
             "career": self.career,
             "rank": self.rank,
             "terms": self.terms,
+            "died": self.died,
             "skills": self.skills,
             "skills_string": self.get_skills_string(),
             "weapons": self.weapons,
             "armor": self.armor,
             "equipment": self.equipment,
-            "cash": self.cash
+            "cash": self.cash,
+            "psionic": self.psionic
         }
+    
+    def get_rank_title(self) -> str:
+        """
+        Get the character's rank title based on career and rank.
+        
+        Returns:
+            str: Rank title
+        """
+        if not self.career or self.career not in CAREERS:
+            return ""
+        
+        ranks = CAREERS[self.career]["ranks"]
+        if self.rank < len(ranks):
+            return ranks[self.rank]
+        else:
+            return ranks[-1] if ranks else ""
+    
+    def get_psionic_string(self) -> str:
+        """
+        Get the character's psionic abilities as a formatted string.
+        
+        Returns:
+            str: Psionic abilities string
+        """
+        if not self.psionic["has_psionic"]:
+            return "None"
+        
+        psr = self.psionic["psr"]
+        is_trained = self.psionic["is_trained"]
+        talents = self.psionic["talents"]
+        
+        if not is_trained:
+            return f"PSR {psr} (Untrained)"
+        
+        talents_str = ", ".join(talents) if talents else "None"
+        return f"PSR {psr} (Trained) - Talents: {talents_str}"
     
     def __str__(self) -> str:
         """
@@ -231,6 +347,14 @@ class Character:
         Returns:
             str: Character summary
         """
+        rank_title = self.get_rank_title()
+        rank_display = f"{rank_title} (Rank {self.rank})" if rank_title else f"Rank {self.rank}"
+        
+        weapons_str = ", ".join(self.weapons) if self.weapons else "None"
+        equipment_str = ", ".join(self.equipment) if self.equipment else "None"
+        
+        status = "Deceased (died during service)" if self.died else "Active"
+        
         return (
             f"Name: {self.name}\n"
             f"UPP: {self.get_upp_string()}\n"
@@ -238,9 +362,15 @@ class Character:
             f"Race: {self.race}\n"
             f"Age: {self.age}\n"
             f"Career: {self.career}\n"
-            f"Rank: {self.rank}\n"
+            f"Rank: {rank_display}\n"
             f"Terms: {self.terms}\n"
+            f"Status: {status}\n"
             f"Skills: {self.get_skills_string()}\n"
+            f"Weapons: {weapons_str}\n"
+            f"Armor: {self.armor or 'None'}\n"
+            f"Equipment: {equipment_str}\n"
+            f"Cash: {self.cash} Credits\n"
+            f"Psionics: {self.get_psionic_string()}\n"
         )
 
 

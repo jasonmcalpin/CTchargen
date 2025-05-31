@@ -43,8 +43,33 @@ def main():
         print("\nPreview of first character:")
         print(f"Name: {characters[0].name}")
         print(f"UPP: {characters[0].get_upp_string()}")
+        print(f"Gender: {characters[0].gender}")
+        print(f"Race: {characters[0].race}")
+        print(f"Age: {characters[0].age}")
         print(f"Career: {characters[0].career}")
+        
+        rank_title = characters[0].get_rank_title()
+        rank_display = f"{rank_title} (Rank {characters[0].rank})" if rank_title else f"Rank {characters[0].rank}"
+        print(f"Rank: {rank_display}")
+        
+        print(f"Terms: {characters[0].terms}")
+        
+        status = "Deceased (died during service)" if characters[0].died else "Active"
+        print(f"Status: {status}")
+        
         print(f"Skills: {characters[0].get_skills_string()}")
+        
+        weapons_str = ", ".join(characters[0].weapons) if characters[0].weapons else "None"
+        print(f"Weapons: {weapons_str}")
+        
+        print(f"Armor: {characters[0].armor or 'None'}")
+        
+        equipment_str = ", ".join(characters[0].equipment) if characters[0].equipment else "None"
+        print(f"Equipment: {equipment_str}")
+        
+        print(f"Cash: {characters[0].cash} Credits")
+        
+        print(f"Psionics: {characters[0].get_psionic_string()}")
 
 
 if __name__ == "__main__":

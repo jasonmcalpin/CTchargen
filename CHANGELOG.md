@@ -2,6 +2,38 @@
 
 All notable changes to the CTchargen project will be documented in this file.
 
+## [3.2.0] - 2025-05-30
+
+### Added
+- Classic Traveller career generation with proper enlistment, survival, commission, promotion, and re-enlistment rolls
+- Psionic system with PSR generation, training checks, and talent selection
+- Character death during service (failed survival roll)
+- Aging effects for characters with multiple terms
+- Updated templates to display psionic information and character status
+- New documentation for the psionic system
+
+### Changed
+- Career generation now uses authentic Classic Traveller tables and rules
+- Character terms are now determined by re-enlistment rolls rather than random assignment
+- Character generation is now more faithful to the Classic Traveller rulebook
+
+## [3.1.0] - 2025-05-30
+
+### Added
+- Career generation system with six career paths (Navy, Marines, Army, Scouts, Merchants, Other)
+- Rank generation based on career and terms served
+- Skill acquisition based on career and terms served
+- Equipment generation (weapons, armor, and gear) appropriate to career
+- Cash generation based on career and terms served
+- Hexadecimal UPP values (e.g., "7A8B9C" instead of "771011106")
+- Updated templates to display career, rank, terms, skills, weapons, armor, equipment, and cash
+- Improved character preview in command-line output
+
+### Changed
+- Character generation now includes complete career information
+- Templates updated to support new character attributes
+- Renderer updated to handle rank titles in templates
+
 ## [3.0.0] - 2025-05-30
 
 ### Major Changes

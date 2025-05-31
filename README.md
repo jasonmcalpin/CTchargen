@@ -8,9 +8,17 @@ CTchargen is a Python-based character generator for the Classic Traveller role-p
 
 ## Features
 
-- Generate random Classic Traveller characters
+- Generate random Classic Traveller characters with:
+  - Hexadecimal UPP values (e.g., "7A8B9C")
+  - Authentic career generation with proper enlistment, survival, commission, promotion, and re-enlistment rolls
+  - Skills based on career and terms served
+  - Weapons, armor, and equipment appropriate to career
+  - Cash based on career and terms served
+  - Psionic abilities with PSR generation, training checks, and talent selection
+  - Aging effects for characters with multiple terms
+  - Character death during service (failed survival roll)
 - Customizable character traits and equipment
-- Multiple output formats using templates
+- Multiple output formats using templates (text, markdown)
 - Command-line interface for easy use
 - Web interface for browser-based access
 - RESTful API for integration with other tools
@@ -184,6 +192,11 @@ Available templates:
 - `death.template`: Death & Dismemberment format
 - `world.template`: World generation format
 
+Both the text and markdown templates now include:
+- Career information (career, rank, terms served)
+- Character status (active or deceased)
+- Psionic information (PSR, training status, talents)
+
 ### Custom Templates
 
 You can create your own templates by adding a file to the `templates/` directory. Template files use Python's string.Template format with placeholders for character attributes.
@@ -195,78 +208,16 @@ UPP: ${upp_string}
 Gender: ${gender}
 Race: ${race}
 Age: ${age}
+Career: ${career}
+Rank: ${rank}
+Terms: ${terms}
 Skills: ${skills_string}
+Weapons: ${weapons}
+Armor: ${armor}
+Equipment: ${equipment}
+Cash: ${cash} Credits
 ```
 
-## Project Structure
-
-```
-CTchargen/
-├── chargen.py              # Main entry point (legacy)
-├── install.py              # Installation script
-├── run_backend.bat         # Windows script to run backend
-├── run_backend.sh          # Unix script to run backend
-├── run_frontend.bat        # Windows script to run frontend
-├── run_frontend.sh         # Unix script to run frontend
-├── start_app.bat           # Windows script to start the entire application
-├── start_app.sh            # Unix script to start the entire application
-├── test_installation.bat   # Windows script to test the installation
-├── test_installation.sh    # Unix script to test the installation
-├── fix_frontend_build.bat  # Windows script to fix frontend build issues
-├── fix_frontend_build.sh   # Unix script to fix frontend build issues
-├── README.md               # Documentation
-├── LICENSE                 # MIT License
-├── .gitignore              # Git ignore file
-├── src/                    # Source code
-│   ├── __init__.py         # Package initialization
-│   ├── chargen.py          # Main module
-│   ├── character.py        # Character generation
-│   ├── config.py           # Configuration
-│   ├── renderer.py         # Template rendering
-│   └── lib/                # Library modules
-│       ├── __init__.py     # Package initialization
-│       ├── hyphenate.py    # Word hyphenation
-│       ├── stellagama.py   # Utility functions
-│       ├── wordplay.py     # Name generation
-│       └── worldgen.py     # World generation
-├── data/                   # Data files
-│   └── syllable_starter.json  # Syllable data
-├── names/                  # Name files
-│   ├── englishsyllables.txt
-│   ├── femalenames.txt
-│   ├── malenames.txt
-│   └── ...
-├── templates/              # Template files
-│   ├── text.template       # Plain text output
-│   ├── markdown.template   # Markdown output
-│   └── ...
-├── output/                 # Generated output files (not tracked in git)
-├── scripts/                # Helper scripts
-│   ├── run_backend.py      # Script to run backend server
-│   └── run_frontend.py     # Script to run frontend server
-├── web/                    # Web interface
-│   ├── backend/            # Backend API
-│   │   ├── api/            # API endpoints
-│   │   ├── models/         # Data models
-│   │   ├── utils/          # Utility functions
-│   │   ├── main.py         # FastAPI application
-│   │   └── requirements.txt # Backend dependencies
-│   └── frontend/           # Frontend application
-│       ├── public/         # Static files
-│       ├── src/            # Source code
-│       │   ├── components/ # React components
-│       │   ├── hooks/      # React hooks
-│       │   ├── styles/     # SCSS styles
-│       │   ├── types/      # TypeScript types
-│       │   ├── utils/      # Utility functions
-│       │   ├── App.tsx     # Main application component
-│       │   └── main.tsx    # Entry point
-│       ├── index.html      # HTML template
-│       ├── package.json    # Frontend dependencies
-│       ├── tsconfig.json   # TypeScript configuration
-│       └── vite.config.ts  # Vite configuration
-└── venv/                   # Virtual environment (not tracked in git)
-```
 
 ## License
 

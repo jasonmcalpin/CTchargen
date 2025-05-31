@@ -13,9 +13,16 @@ The character generation process follows these steps:
 1. Generate basic characteristics (UPP - Universal Personality Profile)
 2. Determine gender and race
 3. Generate a name
-4. Determine career and rank
-5. Generate skills
-6. Assign equipment and cash
+4. Determine career, rank, and terms served (with survival and re-enlistment rolls)
+5. Generate skills based on career and terms
+6. Assign weapons, armor, and equipment based on career
+7. Determine cash based on career and terms
+8. Check for psionic potential and generate psionic abilities if applicable
+9. Apply aging effects for characters with multiple terms
+
+For detailed information on the career generation system, see the [Career Generation Documentation](career_generation.md).
+
+For detailed information on the psionic system, see the [Psionic System Documentation](psionics.md).
 
 ## Using the Character Generator
 
@@ -79,17 +86,30 @@ Each character has the following attributes:
 ### Basic Characteristics
 
 - `name`: Character name
-- `upp`: Universal Personality Profile (list of integers)
-- `upp_string`: UPP as a string
+- `upp`: Universal Personality Profile (dictionary of characteristics)
+- `upp_string`: UPP as a hexadecimal string (e.g., "7A8B9C")
 - `gender`: Character gender
 - `race`: Character race
 - `age`: Character age
 
 ### Career Information
 
-- `career`: Character career
-- `rank`: Character rank
-- `terms`: Number of terms served
+- `career`: Character career (e.g., "Navy", "Marines", "Scouts")
+- `rank`: Character rank (e.g., "Lieutenant", "Captain")
+- `terms`: Number of terms served (1-7)
+- `died`: Whether the character died during service
+
+For a complete list of available careers and ranks, see the [Career Generation Documentation](career_generation.md).
+
+### Psionic Information
+
+- `psionic`: Dictionary containing psionic information
+  - `has_psionic`: Whether the character has psionic abilities
+  - `psr`: Psionic Strength Rating (2-12)
+  - `is_trained`: Whether the character has received psionic training
+  - `talents`: List of psionic talents
+
+For detailed information on the psionic system, see the [Psionic System Documentation](psionics.md).
 
 ### Skills and Abilities
 

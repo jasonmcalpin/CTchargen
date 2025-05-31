@@ -5,6 +5,8 @@ Welcome to the CTchargen documentation. This documentation provides information 
 ## Documentation Pages
 
 - [Character Generation](character_generation.md)
+- [Career Generation](career_generation.md)
+- [Psionic System](psionics.md)
 - [Configuration](configuration.md)
 - [Templates](templates.md)
 - [Word Generation](word_generation.md)

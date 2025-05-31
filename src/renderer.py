@@ -8,6 +8,7 @@ import os
 import string
 from typing import Dict, List, Any, Optional, Union
 
+import glob
 from src.config import config
 
 
@@ -56,7 +57,7 @@ class TemplateRenderer:
             str: Rendered character data
         """
         # Use string.Template for simple template substitution
-        template = string.Template(self.template_content)
+        template_content = self.template_content
         
         # Prepare the data for rendering
         render_data = {}
@@ -70,6 +71,59 @@ class TemplateRenderer:
                 render_data[key] = ", ".join(value) if value else "None"
             else:
                 render_data[key] = value
+        
+        # Add rank title if available
+        if 'career' in character_data and 'rank' in character_data:
+            from src.careers import CAREERS
+            career = character_data['career']
+            rank_index = character_data['rank']
+            
+            if career in CAREERS and rank_index < len(CAREERS[career]['ranks']):
+                rank_title = CAREERS[career]['ranks'][rank_index]
+                render_data['rank'] = f"{rank_title} (Rank {rank_index})"
+        
+        # Handle special template variables
+        
+        # Status (died)
+        if 'died' in character_data:
+            died = character_data['died']
+            status = "Deceased (died during service)" if died else "Active"
+            template_content = template_content.replace("${died ? \"Deceased (died during service)\" : \"Active\"}", status)
+        
+        # Psionics
+        if 'psionic' in character_data:
+            psionic = character_data['psionic']
+            psionic_text = "None"
+            
+            if psionic.get('has_psionic', False):
+                psr = psionic.get('psr', 0)
+                is_trained = psionic.get('is_trained', False)
+                talents = psionic.get('talents', [])
+                
+                if is_trained:
+                    talents_str = ", ".join(talents) if talents else "None"
+                    if "**PSR:**" in template_content:  # Markdown format
+                        psionic_text = f"**PSR:** {psr} (Trained)  \n**Talents:** {talents_str}"
+                    else:  # Text format
+                        psionic_text = f"PSR {psr} (Trained) - Talents: {talents_str}"
+                else:
+                    if "**PSR:**" in template_content:  # Markdown format
+                        psionic_text = f"**PSR:** {psr} (Untrained)"
+                    else:  # Text format
+                        psionic_text = f"PSR {psr} (Untrained)"
+            
+            template_content = template_content.replace(
+                "${psionic.has_psionic ? (psionic.is_trained ? `**PSR:** ${psionic.psr} (Trained)  \\n**Talents:** ${psionic.talents.length ? psionic.talents.join(\", \") : \"None\"}` : `**PSR:** ${psionic.psr} (Untrained)`) : \"None\"}",
+                psionic_text
+            )
+            
+            template_content = template_content.replace(
+                "${psionic.has_psionic ? (psionic.is_trained ? `PSR ${psionic.psr} (Trained) - Talents: ${psionic.talents.length ? psionic.talents.join(\", \") : \"None\"}` : `PSR ${psionic.psr} (Untrained)`) : \"None\"}",
+                psionic_text
+            )
+        
+        # Create a new template with the processed content
+        template = string.Template(template_content)
         
         # Render the template
         try:
@@ -190,3 +244,19 @@ def save_characters(characters_data: List[Dict[str, Any]], filename: str,
     """
     renderer = TemplateRenderer(template_name)
     return renderer.save_multiple(characters_data, filename, extension)
+
+
+def get_available_templates() -> List[str]:
+    """
+    Get a list of available templates.
+    
+    Returns:
+        List[str]: List of template names (without extension)
+    """
+    templates_dir = config.TEMPLATES_DIR
+    template_files = glob.glob(os.path.join(templates_dir, "*.template"))
+    
+    # Extract template names without extension
+    template_names = [os.path.splitext(os.path.basename(f))[0] for f in template_files]
+    
+    return template_names
