@@ -75,8 +75,8 @@ The web interface provides a user-friendly way to generate and view characters.
 
 Use the all-in-one startup script to start both the backend and frontend servers and open the web interface in your browser:
 
-- Windows: `start_app.bat`
-- Unix/MacOS: `./start_app.sh`
+- Windows: `start.bat`
+- Unix/MacOS: `./start.sh`
 
 #### Troubleshooting Frontend Build Issues
 
@@ -280,5 +280,5 @@ This project is licensed under the MIT License - see the LICENSE file for detail
   - Word generation system
   - Template system
   - Command-line interface
-- Web interface and API by [Your Name]
+- Web interface and API by Jason McAlpin
 - Currently maintained by Jason McAlpin
